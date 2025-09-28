@@ -29,8 +29,6 @@
   body {
     @apply bg-[#0B0F12] text-white antialiased;
     background: linear-gradient(135deg, #0b0f12 0%, #0f1720 50%, #13161a 100%);
-    height: 100vh;
-    overflow: hidden;
   }
 
   * {

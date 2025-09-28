@@ -11,14 +11,14 @@ export default function HomePage() {
   // Cache long-term for  performance
 
   return (
-    <div className="h-full overflow-hidden">
+    <div className="home-page-container">
       <section className="relative h-full flex flex-col lg:flex-row items-center justify-center gap-x-16 lg:gap-x-32 py-10">
         {/* Left Content */}
         <div className="basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 ml-40 lg:ml-56 xl:ml-64">
           <h1
             className="font-bold leading-tight"
             style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
-          > 
+          >
             <span className="block text-white">Find Your Travel</span>
             <span className="block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] bg-clip-text text-transparent">
               Buddy.
