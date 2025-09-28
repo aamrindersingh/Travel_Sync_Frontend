@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export default function HomePage() {
   // TODO: fetch homepage data from /lib/api.ts
   // SSG - public landing / marketing page
-  // Cache long-term for performance
+  // Cache long-term for  performance
 
   return (
     <div className="h-full overflow-hidden">
@@ -18,7 +18,7 @@ export default function HomePage() {
           <h1
             className="font-bold leading-tight"
             style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
-          >
+          > 
             <span className="block text-white">Find Your Travel</span>
             <span className="block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] bg-clip-text text-transparent">
               Buddy.
