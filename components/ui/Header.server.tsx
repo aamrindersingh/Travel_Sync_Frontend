@@ -2,8 +2,8 @@
 import Link from "next/link";
 import ProfileDropdown from "./ProfileDropdown.client";
 
-export default function Header() {
-  // TODO: fetch user data from /lib/api.ts
+export default function Header() { 
+  // TODO: fetch user data from /lib/ap i.ts
 
   return (
     <header
