@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 
+
 export default function ClientCreateForm() {
   const [formData, setFormData] = useState({
     source: '',
@@ -37,12 +38,7 @@ export default function ClientCreateForm() {
     }
   };
 
-  const handleTimeClick = () => {
-    const timeInput = document.getElementById('time') as HTMLInputElement;
-    if (timeInput) {
-      timeInput.showPicker();
-    }
-  };
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 relative">
@@ -124,14 +120,15 @@ export default function ClientCreateForm() {
             <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             Preferred Time
           </label>
-          <div className="relative" onClick={handleTimeClick}>
+          <div className="relative">
             <input
-              type="time"
+              type="text"
               id="time"
               name="time"
               value={formData.time}
               onChange={handleChange}
-              className="w-full px-4 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)] cursor-pointer"
+              placeholder="12:00 AM"
+              className="w-full px-4 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
               required
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white">
