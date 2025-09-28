@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  font-size: 16px; /* Base font size */
 }
 
 @theme inline {
@@ -10,8 +11,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-neon-accent: #00E4FF;
-  --color-neon-accent-2: #7CFFEA;
+  --color-neon-accent: #00e4ff;
+  --color-neon-accent-2: #7cffea;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,4 +28,27 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   height: 100vh;
   overflow: hidden;
+}
+
+/* Typography scaling */
+h1 {
+  font-size: clamp(1.5rem, 2vw, 2.5rem);
+}
+h2 {
+  font-size: clamp(1.25rem, 1.8vw, 2rem);
+}
+p,
+button {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+/* Layout scaling */
+.container {
+  max-width: clamp(20rem, 80%, 60rem);
+  margin: 0 auto;
+}
+
+.ui-wrapper {
+  transform: scale(1);
+  transform-origin: top left;
 }

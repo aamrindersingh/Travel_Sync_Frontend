@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export default function TravelMap() {
+export default function TravelMap({ className }: { className?: string }) {
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
@@ -44,9 +44,10 @@ export default function TravelMap() {
   return (
     <svg
       ref={svgRef}
-      className="w-full h-full max-h-[60vh] sm:max-h-[65vh] lg:max-h-[70vh] opacity-80 sm:opacity-85"
+      className={`w-full h-full min-h-screen ${className}`}
       viewBox="0 0 800 400"
       xmlns="http://www.w3.org/2000/svg"
+      preserveAspectRatio="xMidYMid meet"
     >
       {/* Definitions for gradients and filters */}
       <defs>
