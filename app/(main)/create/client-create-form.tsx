@@ -9,9 +9,7 @@ export default function ClientCreateForm() {
     destination: '',
     date: '',
     time: '',
-    transportMode: '',
-    phone: '',
-    notes: ''
+    phone: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -32,142 +30,180 @@ export default function ClientCreateForm() {
     }));
   };
 
+  const handleDateClick = () => {
+    const dateInput = document.getElementById('date') as HTMLInputElement;
+    if (dateInput) {
+      dateInput.showPicker();
+    }
+  };
+
+  const handleTimeClick = () => {
+    const timeInput = document.getElementById('time') as HTMLInputElement;
+    if (timeInput) {
+      timeInput.showPicker();
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="source" className="block text-sm font-medium text-white mb-2">
+    <form onSubmit={handleSubmit} className="space-y-6 relative">
+      {/* Neon glow background effect */}
+      <div className="absolute -inset-4 bg-gradient-to-r from-[var(--neon-accent)]/5 via-transparent to-[var(--neon-accent-2)]/5 rounded-3xl blur-xl opacity-30"></div>
+      
+      {/* Source and Destination */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+        <div className="group">
+          <label htmlFor="source" className="block text-sm font-semibold text-white mb-2 flex items-center">
+            <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             From (Source)
           </label>
-          <input
-            type="text"
-            id="source"
-            name="source"
-            value={formData.source}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
-            placeholder="Where are you starting from?"
-            required
-          />
+          <div className="relative">
+            <input
+              type="text"
+              id="source"
+              name="source"
+              value={formData.source}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
+              placeholder="Where are you starting from?"
+              required
+            />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="destination" className="block text-sm font-medium text-white mb-2">
+        <div className="group">
+          <label htmlFor="destination" className="block text-sm font-semibold text-white mb-2 flex items-center">
+            <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             To (Destination)
           </label>
-          <input
-            type="text"
-            id="destination"
-            name="destination"
-            value={formData.destination}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
-            placeholder="Where do you want to go?"
-            required
-          />
+          <div className="relative">
+            <input
+              type="text"
+              id="destination"
+              name="destination"
+              value={formData.destination}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
+              placeholder="Where do you want to go?"
+              required
+            />
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="date" className="block text-sm font-medium text-white mb-2">
+      {/* Date and Time */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+        <div className="group">
+          <label htmlFor="date" className="block text-sm font-semibold text-white mb-2 flex items-center">
+            <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             Travel Date
           </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
-            required
-          />
+          <div className="relative" onClick={handleDateClick}>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="w-full px-4 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)] cursor-pointer"
+              required
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+          </div>
         </div>
-        <div>
-          <label htmlFor="time" className="block text-sm font-medium text-white mb-2">
+        <div className="group">
+          <label htmlFor="time" className="block text-sm font-semibold text-white mb-2 flex items-center">
+            <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             Preferred Time
           </label>
-          <input
-            type="time"
-            id="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
-            required
-          />
+          <div className="relative" onClick={handleTimeClick}>
+            <input
+              type="time"
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              className="w-full px-4 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)] cursor-pointer"
+              required
+            />
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="transportMode" className="block text-sm font-medium text-white mb-2">
-            Transport Mode
-          </label>
-          <select
-            id="transportMode"
-            name="transportMode"
-            value={formData.transportMode}
-            onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
-            required
-          >
-            <option value="">Select transport mode</option>
-            <option value="bus">Bus</option>
-            <option value="train">Train</option>
-            <option value="flight">Flight</option>
-            <option value="car">Car (Ride Share)</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
-            Contact Number
-          </label>
+      {/* Contact Number */}
+      <div className="group relative z-10">
+        <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
+          Contact Number
+        </label>
+        <div className="relative">
           <input
             type="tel"
             id="phone"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300"
+            className="w-full px-4 py-3 pl-12 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400/30 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 hover:bg-green-500/15 group-hover:border-green-400/50 focus:shadow-[0_0_20px_rgba(34,197,94,0.4)]"
             placeholder="Your WhatsApp number"
             required
           />
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+            </svg>
+          </div>
+          <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+          <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
         </div>
       </div>
 
-      <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-white mb-2">
-          Additional Notes
-        </label>
-        <textarea
-          id="notes"
-          name="notes"
-          rows={4}
-          value={formData.notes}
-          onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 resize-none"
-          placeholder="Tell us more about your travel plans, preferences, or any special requirements..."
-        />
-      </div>
-
-      <div className="flex justify-end pt-6">
+      {/* Submit Button */}
+      <div className="flex justify-center pt-8 relative z-10">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          className="group relative px-8 py-4 rounded-2xl font-bold text-white transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          style={{
+            background: 'linear-gradient(135deg, var(--neon-accent) 0%, var(--neon-accent-2) 100%)',
+            boxShadow: '0 8px 32px rgba(0, 228, 255, 0.4), 0 0 0 1px rgba(0, 228, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
+          }}
         >
-          {isSubmitting ? (
-            <span className="flex items-center space-x-2">
-              <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Creating Ticket...</span>
-            </span>
-          ) : (
-            'Create Travel Ticket'
-          )}
+          {/* Animated neon glow effect */}
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[var(--neon-accent)]/50 to-[var(--neon-accent-2)]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm"></div>
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="relative flex items-center space-x-3">
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Creating Ticket...</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span>Create Travel Ticket</span>
+              </>
+            )}
+          </div>
         </button>
       </div>
     </form>
