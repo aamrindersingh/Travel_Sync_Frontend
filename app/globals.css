@@ -736,6 +736,43 @@ button {
   overflow: hidden;
 }
 
+/* Modern ticket card styling (black/blue theme) */
+.ticket-modern {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  backdrop-filter: blur(6px);
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+.ticket-modern:hover {
+  transform: translateY(-2px);
+  border-color: rgba(37, 99, 235, 0.25);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.45);
+}
+.ticket-modern::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(90deg, rgba(37,99,235,0.35), rgba(37,99,235,0.15));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0.08;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+.ticket-modern:hover::before { opacity: 0.18; }
+
+.ticket-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+
 /* One-time plus intro animation (more visible) */
 .plus-intro {
   position: relative;

@@ -59,13 +59,13 @@ export default function TicketList({ tickets = [] }: TicketListProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-500/20 text-green-400 border-green-500/30';
+        return 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30';
       case 'completed':
-        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+        return 'text-sky-300 bg-sky-500/10 border-sky-500/30';
       case 'cancelled':
-        return 'bg-red-500/20 text-red-400 border-red-500/30';
+        return 'text-rose-300 bg-rose-500/10 border-rose-500/30';
       default:
-        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+        return 'text-zinc-300 bg-zinc-500/10 border-zinc-500/30';
     }
   };
 
@@ -101,52 +101,15 @@ export default function TicketList({ tickets = [] }: TicketListProps) {
                   {new Date(ticket.date).toLocaleDateString()} at {ticket.time}
                 </p>
               </div>
-              <div className="flex items-center space-x-3">
-                <span className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(ticket.status)}`}>
+              <div className="flex items-center">
+                <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border tracking-wide uppercase ${getStatusColor(ticket.status)}`}>
                   {ticket.status}
-                </span>
-                <span className="text-sm text-white/60">
-                  {ticket.matchesCount} matches
                 </span>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[var(--neon-accent)]/20 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[var(--neon-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-white/60">Transport</p>
-                  <p className="font-medium text-white">{ticket.transportMode}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[var(--neon-accent-2)]/20 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[var(--neon-accent-2)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-white/60">Time</p>
-                  <p className="font-medium text-white">{ticket.time}</p>
-                </div>
-              </div>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-[var(--neon-accent)]/20 flex items-center justify-center">
-                  <svg className="w-5 h-5 text-[var(--neon-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-sm text-white/60">Matches</p>
-                  <p className="font-medium text-[var(--neon-accent)]">{ticket.matchesCount} found</p>
-                </div>
-              </div>
+            <div className="mb-6 text-white/80 text-sm">
+              <span className="text-white/60">Time:</span> {ticket.time}
             </div>
 
             <div className="ticket-divider mb-4"></div>
