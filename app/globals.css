@@ -11,8 +11,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-neon-accent: #00e4ff;
-  --color-neon-accent-2: #7cffea;
+  --color-neon-accent: #ff6b35;
+  --color-neon-accent-2: #f7931e;
+  --color-diwali-gold: #ffd700;
+  --color-diwali-orange: #ff8c00;
+  --color-diwali-red: #dc143c;
+  --color-diwali-green: #32cd32;
+  --color-diwali-purple: #9370db;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,9 +28,699 @@
 }
 
 body {
-  @apply bg-black;
+  background: linear-gradient(135deg, #000000 0%, #0a0a0a 25%, #111111 50%, #0a0a0a 75%, #000000 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Professional Diwali Background Glow */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(255, 140, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 60% 40%, rgba(220, 20, 60, 0.04) 0%, transparent 50%);
+  animation: subtleGlow 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Transparent Diwali Background Effects */
+.diwali-background-effects {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* Floating Diwali Lights */
+.diwali-light {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 107, 53, 0.4) 50%, transparent 100%);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  animation: floatLight 8s ease-in-out infinite;
+}
+
+.diwali-light-1 {
+  width: 40px;
+  height: 40px;
+  top: 10%;
+  left: 15%;
+  animation-delay: 0s;
+}
+
+.diwali-light-2 {
+  width: 30px;
+  height: 30px;
+  top: 20%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.5) 0%, rgba(220, 20, 60, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+  animation-delay: 2s;
+}
+
+.diwali-light-3 {
+  width: 35px;
+  height: 35px;
+  top: 60%;
+  left: 10%;
+  background: radial-gradient(circle, rgba(50, 205, 50, 0.4) 0%, rgba(147, 112, 219, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 18px rgba(50, 205, 50, 0.3);
+  animation-delay: 4s;
+}
+
+.diwali-light-4 {
+  width: 25px;
+  height: 25px;
+  top: 70%;
+  right: 15%;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.5) 0%, rgba(0, 255, 255, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 12px rgba(255, 20, 147, 0.4);
+  animation-delay: 1s;
+}
+
+.diwali-light-5 {
+  width: 45px;
+  height: 45px;
+  top: 40%;
+  left: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 69, 0, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+  animation-delay: 3s;
+}
+
+.diwali-light-6 {
+  width: 20px;
+  height: 20px;
+  top: 80%;
+  left: 70%;
+  background: radial-gradient(circle, rgba(147, 112, 219, 0.6) 0%, rgba(255, 107, 53, 0.4) 50%, transparent 100%);
+  box-shadow: 0 0 10px rgba(147, 112, 219, 0.4);
+  animation-delay: 5s;
+}
+
+.diwali-light-7 {
+  width: 35px;
+  height: 35px;
+  top: 15%;
+  left: 60%;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.5) 0%, rgba(0, 255, 255, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 18px rgba(255, 20, 147, 0.4);
+  animation-delay: 6s;
+}
+
+.diwali-light-8 {
+  width: 28px;
+  height: 28px;
+  top: 35%;
+  right: 5%;
+  background: radial-gradient(circle, rgba(50, 205, 50, 0.6) 0%, rgba(255, 215, 0, 0.4) 50%, transparent 100%);
+  box-shadow: 0 0 14px rgba(50, 205, 50, 0.4);
+  animation-delay: 1.5s;
+}
+
+.diwali-light-9 {
+  width: 42px;
+  height: 42px;
+  top: 55%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.5) 0%, rgba(220, 20, 60, 0.3) 50%, transparent 100%);
+  box-shadow: 0 0 22px rgba(255, 69, 0, 0.4);
+  animation-delay: 3.5s;
+}
+
+.diwali-light-10 {
+  width: 24px;
+  height: 24px;
+  top: 85%;
+  right: 50%;
+  background: radial-gradient(circle, rgba(147, 112, 219, 0.7) 0%, rgba(255, 140, 0, 0.5) 50%, transparent 100%);
+  box-shadow: 0 0 12px rgba(147, 112, 219, 0.5);
+  animation-delay: 7s;
+}
+
+/* Sparkling Particles */
+.diwali-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+  animation: sparkleFloat 6s ease-in-out infinite;
+}
+
+.diwali-particle-1 {
+  top: 15%;
+  left: 25%;
+  animation-delay: 0.5s;
+}
+
+.diwali-particle-2 {
+  top: 25%;
+  right: 30%;
+  background: rgba(255, 107, 53, 0.7);
+  box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+  animation-delay: 1.5s;
+}
+
+.diwali-particle-3 {
+  top: 45%;
+  left: 20%;
+  background: rgba(50, 205, 50, 0.6);
+  box-shadow: 0 0 4px rgba(50, 205, 50, 0.4);
+  animation-delay: 3s;
+}
+
+.diwali-particle-4 {
+  top: 55%;
+  right: 25%;
+  background: rgba(220, 20, 60, 0.8);
+  box-shadow: 0 0 7px rgba(220, 20, 60, 0.6);
+  animation-delay: 2s;
+}
+
+.diwali-particle-5 {
+  top: 75%;
+  left: 40%;
+  background: rgba(147, 112, 219, 0.7);
+  box-shadow: 0 0 5px rgba(147, 112, 219, 0.5);
+  animation-delay: 4.5s;
+}
+
+.diwali-particle-6 {
+  top: 35%;
+  left: 60%;
+  background: rgba(255, 140, 0, 0.6);
+  box-shadow: 0 0 4px rgba(255, 140, 0, 0.4);
+  animation-delay: 1s;
+}
+
+.diwali-particle-7 {
+  top: 65%;
+  right: 40%;
+  background: rgba(255, 20, 147, 0.7);
+  box-shadow: 0 0 6px rgba(255, 20, 147, 0.5);
+  animation-delay: 3.5s;
+}
+
+.diwali-particle-8 {
+  top: 85%;
+  left: 80%;
+  background: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.4);
+  animation-delay: 2.5s;
+}
+
+.diwali-particle-9 {
+  top: 5%;
+  left: 50%;
+  background: rgba(255, 215, 0, 0.8);
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+  animation-delay: 4s;
+}
+
+.diwali-particle-10 {
+  top: 90%;
+  left: 15%;
+  background: rgba(255, 107, 53, 0.7);
+  box-shadow: 0 0 5px rgba(255, 107, 53, 0.5);
+  animation-delay: 5.5s;
+}
+
+.diwali-particle-11 {
+  top: 50%;
+  left: 5%;
+  background: rgba(50, 205, 50, 0.6);
+  box-shadow: 0 0 4px rgba(50, 205, 50, 0.4);
+  animation-delay: 1.2s;
+}
+
+.diwali-particle-12 {
+  top: 25%;
+  left: 85%;
+  background: rgba(220, 20, 60, 0.8);
+  box-shadow: 0 0 7px rgba(220, 20, 60, 0.6);
+  animation-delay: 6.5s;
+}
+
+/* Floating Rangoli Patterns */
+.diwali-rangoli {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 215, 0, 0.1) 0deg,
+    rgba(255, 107, 53, 0.1) 60deg,
+    rgba(50, 205, 50, 0.1) 120deg,
+    rgba(147, 112, 219, 0.1) 180deg,
+    rgba(220, 20, 60, 0.1) 240deg,
+    rgba(255, 140, 0, 0.1) 300deg,
+    rgba(255, 215, 0, 0.1) 360deg
+  );
+  animation: rotateRangoli 12s linear infinite;
+}
+
+.diwali-rangoli-1 {
+  top: 30%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.diwali-rangoli-2 {
+  top: 50%;
+  right: 10%;
+  width: 40px;
+  height: 40px;
+  animation-delay: 4s;
+}
+
+.diwali-rangoli-3 {
+  top: 70%;
+  left: 60%;
+  width: 50px;
+  height: 50px;
+  animation-delay: 8s;
+}
+
+.diwali-rangoli-4 {
+  top: 10%;
+  right: 5%;
+  width: 35px;
+  height: 35px;
+  animation-delay: 2s;
+}
+
+.diwali-rangoli-5 {
+  top: 40%;
+  left: 80%;
+  width: 45px;
+  height: 45px;
+  animation-delay: 6s;
+}
+
+/* Firework Bursts */
+.diwali-firework {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, rgba(255, 107, 53, 0.2) 30%, transparent 70%);
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.4),
+    0 0 60px rgba(255, 107, 53, 0.2);
+  animation: fireworkBurst 4s ease-in-out infinite;
+}
+
+.diwali-firework-1 {
+  top: 20%;
+  left: 25%;
+  animation-delay: 0s;
+}
+
+.diwali-firework-2 {
+  top: 60%;
+  right: 20%;
+  background: radial-gradient(circle, rgba(50, 205, 50, 0.3) 0%, rgba(147, 112, 219, 0.2) 30%, transparent 70%);
+  box-shadow: 
+    0 0 30px rgba(50, 205, 50, 0.4),
+    0 0 60px rgba(147, 112, 219, 0.2);
+  animation-delay: 1.5s;
+}
+
+.diwali-firework-3 {
+  top: 80%;
+  left: 50%;
+  background: radial-gradient(circle, rgba(255, 20, 147, 0.3) 0%, rgba(0, 255, 255, 0.2) 30%, transparent 70%);
+  box-shadow: 
+    0 0 30px rgba(255, 20, 147, 0.4),
+    0 0 60px rgba(0, 255, 255, 0.2);
+  animation-delay: 3s;
+}
+
+.diwali-firework-4 {
+  top: 40%;
+  left: 70%;
+  background: radial-gradient(circle, rgba(255, 140, 0, 0.3) 0%, rgba(220, 20, 60, 0.2) 30%, transparent 70%);
+  box-shadow: 
+    0 0 30px rgba(255, 140, 0, 0.4),
+    0 0 60px rgba(220, 20, 60, 0.2);
+  animation-delay: 4.5s;
+}
+
+/* Floating Candles */
+.diwali-candle {
+  position: absolute;
+  width: 4px;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(255, 215, 0, 0.8) 0%, rgba(255, 107, 53, 0.6) 50%, rgba(255, 140, 0, 0.4) 100%);
+  border-radius: 2px;
+  box-shadow: 
+    0 0 8px rgba(255, 215, 0, 0.6),
+    0 0 16px rgba(255, 107, 53, 0.3);
+  animation: candleFlicker 3s ease-in-out infinite;
+}
+
+.diwali-candle-1 {
+  top: 25%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.diwali-candle-2 {
+  top: 45%;
+  right: 15%;
+  background: linear-gradient(to bottom, rgba(50, 205, 50, 0.8) 0%, rgba(147, 112, 219, 0.6) 50%, rgba(50, 205, 50, 0.4) 100%);
+  box-shadow: 
+    0 0 8px rgba(50, 205, 50, 0.6),
+    0 0 16px rgba(147, 112, 219, 0.3);
+  animation-delay: 1s;
+}
+
+.diwali-candle-3 {
+  top: 65%;
+  left: 20%;
+  background: linear-gradient(to bottom, rgba(255, 20, 147, 0.8) 0%, rgba(0, 255, 255, 0.6) 50%, rgba(255, 20, 147, 0.4) 100%);
+  box-shadow: 
+    0 0 8px rgba(255, 20, 147, 0.6),
+    0 0 16px rgba(0, 255, 255, 0.3);
+  animation-delay: 2s;
+}
+
+.diwali-candle-4 {
+  top: 35%;
+  left: 80%;
+  background: linear-gradient(to bottom, rgba(255, 140, 0, 0.8) 0%, rgba(220, 20, 60, 0.6) 50%, rgba(255, 140, 0, 0.4) 100%);
+  box-shadow: 
+    0 0 8px rgba(255, 140, 0, 0.6),
+    0 0 16px rgba(220, 20, 60, 0.3);
+  animation-delay: 0.5s;
+}
+
+.diwali-candle-5 {
+  top: 75%;
+  right: 30%;
+  background: linear-gradient(to bottom, rgba(147, 112, 219, 0.8) 0%, rgba(255, 107, 53, 0.6) 50%, rgba(147, 112, 219, 0.4) 100%);
+  box-shadow: 
+    0 0 8px rgba(147, 112, 219, 0.6),
+    0 0 16px rgba(255, 107, 53, 0.3);
+  animation-delay: 1.5s;
+}
+
+/* Floating Lanterns */
+.diwali-lantern {
+  position: absolute;
+  width: 25px;
+  height: 35px;
+  background: linear-gradient(45deg, rgba(255, 215, 0, 0.4) 0%, rgba(255, 107, 53, 0.3) 50%, rgba(255, 215, 0, 0.2) 100%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 
+    0 0 15px rgba(255, 215, 0, 0.5),
+    inset 0 0 10px rgba(255, 107, 53, 0.3);
+  animation: lanternSway 5s ease-in-out infinite;
+}
+
+.diwali-lantern-1 {
+  top: 30%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.diwali-lantern-2 {
+  top: 50%;
+  right: 10%;
+  background: linear-gradient(45deg, rgba(50, 205, 50, 0.4) 0%, rgba(147, 112, 219, 0.3) 50%, rgba(50, 205, 50, 0.2) 100%);
+  box-shadow: 
+    0 0 15px rgba(50, 205, 50, 0.5),
+    inset 0 0 10px rgba(147, 112, 219, 0.3);
+  animation-delay: 2s;
+}
+
+.diwali-lantern-3 {
+  top: 70%;
+  left: 60%;
+  background: linear-gradient(45deg, rgba(255, 20, 147, 0.4) 0%, rgba(0, 255, 255, 0.3) 50%, rgba(255, 20, 147, 0.2) 100%);
+  box-shadow: 
+    0 0 15px rgba(255, 20, 147, 0.5),
+    inset 0 0 10px rgba(0, 255, 255, 0.3);
+  animation-delay: 4s;
+}
+
+/* Magical Sparkles */
+.diwali-sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 215, 0, 0.9);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(255, 215, 0, 0.4);
+  animation: sparkleTwinkle 2s ease-in-out infinite;
+}
+
+.diwali-sparkle-1 {
+  top: 10%;
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.diwali-sparkle-2 {
+  top: 40%;
+  right: 25%;
+  background: rgba(255, 107, 53, 0.9);
+  box-shadow: 
+    0 0 10px rgba(255, 107, 53, 0.8),
+    0 0 20px rgba(255, 107, 53, 0.4);
+  animation-delay: 0.5s;
+}
+
+.diwali-sparkle-3 {
+  top: 60%;
+  left: 15%;
+  background: rgba(50, 205, 50, 0.9);
+  box-shadow: 
+    0 0 10px rgba(50, 205, 50, 0.8),
+    0 0 20px rgba(50, 205, 50, 0.4);
+  animation-delay: 1s;
+}
+
+.diwali-sparkle-4 {
+  top: 80%;
+  right: 40%;
+  background: rgba(220, 20, 60, 0.9);
+  box-shadow: 
+    0 0 10px rgba(220, 20, 60, 0.8),
+    0 0 20px rgba(220, 20, 60, 0.4);
+  animation-delay: 1.5s;
+}
+
+.diwali-sparkle-5 {
+  top: 20%;
+  left: 70%;
+  background: rgba(147, 112, 219, 0.9);
+  box-shadow: 
+    0 0 10px rgba(147, 112, 219, 0.8),
+    0 0 20px rgba(147, 112, 219, 0.4);
+  animation-delay: 0.3s;
+}
+
+.diwali-sparkle-6 {
+  top: 50%;
+  left: 85%;
+  background: rgba(255, 20, 147, 0.9);
+  box-shadow: 
+    0 0 10px rgba(255, 20, 147, 0.8),
+    0 0 20px rgba(255, 20, 147, 0.4);
+  animation-delay: 0.8s;
+}
+
+@keyframes subtleGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes floatLight {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-10px) scale(0.9);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateY(-30px) scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.8;
+  }
+  33% {
+    transform: translateY(-15px) scale(1.2);
+    opacity: 1;
+  }
+  66% {
+    transform: translateY(-8px) scale(0.8);
+    opacity: 0.6;
+  }
+}
+
+@keyframes rotateRangoli {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+    opacity: 0.2;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 0.1;
+  }
+}
+
+@keyframes fireworkBurst {
+  0%, 100% {
+    transform: scale(0.8) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: scale(1.2) rotate(90deg);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.5) rotate(180deg);
+    opacity: 0.8;
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    opacity: 0.5;
+  }
+}
+
+@keyframes candleFlicker {
+  0%, 100% {
+    transform: translateY(0px) scaleY(1);
+    opacity: 0.8;
+  }
+  25% {
+    transform: translateY(-2px) scaleY(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(1px) scaleY(0.9);
+    opacity: 0.7;
+  }
+  75% {
+    transform: translateY(-1px) scaleY(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes lanternSway {
+  0%, 100% {
+    transform: rotate(-5deg) translateY(0px);
+    opacity: 0.6;
+  }
+  25% {
+    transform: rotate(5deg) translateY(-10px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: rotate(-3deg) translateY(-5px);
+    opacity: 0.7;
+  }
+  75% {
+    transform: rotate(3deg) translateY(-15px);
+    opacity: 0.9;
+  }
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 0.9;
+  }
+  25% {
+    transform: scale(1.3) rotate(90deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    opacity: 0.8;
+  }
+}
+
+
+/* Diwali Theme Components */
+.diwali-glow {
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.5),
+    0 0 40px rgba(255, 107, 53, 0.3),
+    0 0 60px rgba(255, 140, 0, 0.2);
+  animation: diwaliGlow 3s ease-in-out infinite;
+}
+
+.diwali-sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.diwali-sparkle::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+  animation: sparkleRotate 2s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkleRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Typography scaling */
@@ -55,4 +750,103 @@ button {
 .home-page-container {
   height: calc(100vh - 80px); /* Account for header height */
   overflow: hidden;
+}
+
+/* One-time plus intro animation (more visible) */
+.plus-intro {
+  position: relative;
+  animation: plusPulseRing 1100ms ease-out 0ms 1 both;
+}
+.plus-icon {
+  filter: drop-shadow(0 0 0 rgba(255,215,0,0));
+  animation: plusPop 750ms cubic-bezier(0.2, 0.8, 0.2, 1) 80ms 1 both;
+}
+.plus-intro::after,
+.plus-intro::before {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.plus-intro::after {
+  inset: -8px;
+  border: 2px solid rgba(255, 215, 0, 0.35);
+  filter: blur(2px);
+  animation: ringFade 1100ms ease-out 0ms 1 both;
+}
+.plus-intro::before {
+  inset: -2px;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.35) 35%, transparent 70%);
+  transform: translateX(-120%);
+  animation: shimmerSweep 800ms ease-out 150ms 1 both;
+}
+
+@keyframes plusPop {
+  0% { transform: scale(0.55) rotate(-12deg); opacity: 0; filter: drop-shadow(0 0 0 rgba(255,215,0,0)); }
+  55% { transform: scale(1.35) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 10px rgba(255,215,0,0.55)); }
+  100% { transform: scale(1.05); filter: drop-shadow(0 0 4px rgba(255,215,0,0.35)); }
+}
+@keyframes plusPulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.35), 0 0 0 0 rgba(255, 140, 0, 0.25); }
+  45% { box-shadow: 0 0 0 14px rgba(255, 215, 0, 0.0), 0 0 0 22px rgba(255, 140, 0, 0.0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+}
+@keyframes ringFade {
+  0% { opacity: 0.75; transform: scale(0.85); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+@keyframes shimmerSweep {
+  0% { transform: translateX(-140%) rotate(0.001deg); opacity: 0; }
+  30% { opacity: 0.6; }
+  100% { transform: translateX(140%) rotate(0.001deg); opacity: 0; }
+}
+
+/* Minimal ambient background */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.ambient-noise {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+}
+
+.ambient-orb {
+  position: absolute;
+  width: 42vmin;
+  height: 42vmin;
+  border-radius: 50%;
+  filter: blur(40px);
+  opacity: 0.18;
+  animation: ambientDrift 18s ease-in-out infinite;
+}
+
+.ambient-orb-1 {
+  top: 10%;
+  left: -10%;
+  background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.6), rgba(59,130,246,0.15) 60%, transparent 70%);
+}
+
+.ambient-orb-2 {
+  bottom: -10%;
+  right: -10%;
+  background: radial-gradient(circle at 70% 70%, rgba(16,185,129,0.5), rgba(34,197,94,0.12) 60%, transparent 70%);
+  animation-delay: 9s;
+}
+
+@keyframes ambientDrift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4vmin, -3vmin, 0) scale(1.05);
+  }
 }
