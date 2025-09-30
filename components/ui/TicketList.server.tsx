@@ -91,7 +91,7 @@ export default function TicketList({ tickets = [] }: TicketListProps) {
         </div>
       ) : (
         displayTickets.map((ticket) => (
-          <div key={ticket.id} className="frosted-card hover-lift group">
+          <div key={ticket.id} className="group ticket-modern p-6">
             <div className="flex justify-between items-start mb-6">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[var(--neon-accent)] transition-colors">
@@ -149,7 +149,8 @@ export default function TicketList({ tickets = [] }: TicketListProps) {
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-white/10">
+            <div className="ticket-divider mb-4"></div>
+            <div className="flex justify-between items-center">
               <div className="text-sm text-white/60">
                 Created {new Date().toLocaleDateString()}
               </div>

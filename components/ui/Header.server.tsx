@@ -8,11 +8,9 @@ export default function Header() {
   return (
     <header
       role="banner"
-      className="sticky top-0 z-50 w-full max-w-7xl mx-auto rounded-b-2xl shadow-lg border-b-2 border-[#00E4FF] flex items-center justify-between px-8 py-4 hover:scale-105 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,228,255,0.3)] hover:border-[#00E4FF] backdrop-blur-sm relative overflow-hidden"
+      className="sticky top-0 z-50 w-full max-w-7xl mx-auto rounded-b-2xl shadow-lg border-b-2 border-[#00E4FF] flex items-center justify-between px-8 py-4 hover:scale-105 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,228,255,0.3)] hover:border-[#00E4FF] relative overflow-hidden bg-black"
     >
-      {/* Header Pattern Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-900/3 to-transparent"></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-transparent via-cyan-900/3 to-transparent"></div>
+      {/* Pitch black header, gradients removed */}
       {/* Logo */}
       <Link
         href="/home"

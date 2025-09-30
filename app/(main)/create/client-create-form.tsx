@@ -1,7 +1,7 @@
 // client
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 
 export default function ClientCreateForm() {
@@ -14,8 +14,37 @@ export default function ClientCreateForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 12-hour time picker parts
+  const [timeHour, setTimeHour] = useState('');
+  const [timeMinute, setTimeMinute] = useState('');
+  const [timeAmPm, setTimeAmPm] = useState('');
+
+  const locationOptions = useMemo(
+    () => [
+      'Kempegowda Airport (Terminal-1)',
+      'Kempegowda Airport (Terminal-2)',
+      'KSR Train',
+      'Uniworld-1',
+      'Uniworld-2'
+    ],
+    []
+  );
+
+  const destinationOptions = useMemo(
+    () => locationOptions.filter((opt) => opt !== formData.source),
+    [locationOptions, formData.source]
+  );
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (formData.source === formData.destination) {
+      // basic guard; UI prevents this already
+      return;
+    }
+    // Ensure time is composed in 12-hour format
+    const composedTime = `${timeHour.padStart(2, '0')}:${timeMinute.padStart(2, '0')} ${timeAmPm}`;
+    setFormData(prev => ({ ...prev, time: composedTime }));
     setIsSubmitting(true);
     // TODO: Implement form validation
     // TODO: Call API to create ticket
@@ -53,18 +82,24 @@ export default function ClientCreateForm() {
             From (Source)
           </label>
           <div className="relative">
-            <input
-              type="text"
+            <select
               id="source"
               name="source"
               value={formData.source}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
-              placeholder="Where are you starting from?"
+              className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
               required
-            />
+            >
+              <option value="" disabled>Select source</option>
+              {locationOptions.map((opt) => (
+                <option key={opt} value={opt} className="bg-[#0a0a0a]">{opt}</option>
+              ))}
+            </select>
             <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
             <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+            </div>
           </div>
         </div>
         <div className="group">
@@ -73,18 +108,24 @@ export default function ClientCreateForm() {
             To (Destination)
           </label>
           <div className="relative">
-            <input
-              type="text"
+            <select
               id="destination"
               name="destination"
               value={formData.destination}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
-              placeholder="Where do you want to go?"
+              className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
               required
-            />
+            >
+              <option value="" disabled>Select destination</option>
+              {destinationOptions.map((opt) => (
+                <option key={opt} value={opt} className="bg-[#0a0a0a]">{opt}</option>
+              ))}
+            </select>
             <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
             <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+            </div>
           </div>
         </div>
       </div>
@@ -120,24 +161,61 @@ export default function ClientCreateForm() {
             <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
             Preferred Time
           </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              placeholder="12:00 AM"
-              className="w-full px-4 py-3 pl-12 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 group-hover:border-white/20 focus:shadow-[0_0_20px_rgba(0,228,255,0.3)]"
-              required
-            />
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+          <div className="relative grid grid-cols-3 gap-2">
+            {/* Hour */}
+            <div className="relative">
+              <select
+                aria-label="Hour"
+                value={timeHour}
+                onChange={(e) => setTimeHour(e.target.value)}
+                className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+                required
+              >
+                <option value="" disabled>HH</option>
+                {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')).map(h => (
+                  <option key={h} value={h} className="bg-[#0a0a0a]">{h}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
             </div>
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/5 to-[var(--neon-accent-2)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-            <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[var(--neon-accent)]/20 to-[var(--neon-accent-2)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
+            {/* Minute */}
+            <div className="relative">
+              <select
+                aria-label="Minute"
+                value={timeMinute}
+                onChange={(e) => setTimeMinute(e.target.value)}
+                className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+                required
+              >
+                <option value="" disabled>MM</option>
+                {Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0')).map(m => (
+                  <option key={m} value={m} className="bg-[#0a0a0a]">{m}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+            {/* AM/PM */}
+            <div className="relative">
+              <select
+                aria-label="AM/PM"
+                value={timeAmPm}
+                onChange={(e) => setTimeAmPm(e.target.value)}
+                className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+                required
+              >
+                <option value="" disabled>AM/PM</option>
+                <option value="AM" className="bg-[#0a0a0a]">AM</option>
+                <option value="PM" className="bg-[#0a0a0a]">PM</option>
+              </select>
+              <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
+              </div>
+            </div>
+            {/* removed overlapping clock icon */}
           </div>
         </div>
       </div>
