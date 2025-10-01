@@ -5,12 +5,13 @@ import UserBuddies from '@/components/ui/UserBuddies.client';
 import Recommendations from './recommendations.client';
 
 interface TicketPageProps {
-  params: {
+  params: Promise<{
     ticketId: string;
-  };
+  }>;
 }
 
-export default function TicketPage({ params }: TicketPageProps) {
+export default async function TicketPage({ params }: TicketPageProps) {
+  const { ticketId } = await params;
   // TODO: fetch ticket data from /lib/api.ts
   // SSR/ISR: ticket detail + three groups view (Best Match, Best Group, Other Alternatives)
   // Use short TTL (revalidate 10s) in comment
@@ -21,7 +22,7 @@ export default function TicketPage({ params }: TicketPageProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            Ticket <span className="neon-text">#{params.ticketId}</span>
+            Ticket <span className="neon-text">#{ticketId}</span>
           </h1>
           <p className="text-xl text-white/70">
             Find your perfect travel companions for this journey
@@ -30,10 +31,10 @@ export default function TicketPage({ params }: TicketPageProps) {
 
         {/* Ticket Card */}
         <div className="mb-8">
-          <ClientTicketCard ticketId={params.ticketId} />
+          <ClientTicketCard ticketId={ticketId} />
         </div>
 
-        <Recommendations ticketId={params.ticketId} />
+        <Recommendations ticketId={ticketId} />
       </div>
     </div>
   );

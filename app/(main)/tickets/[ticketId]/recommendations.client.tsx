@@ -2,7 +2,21 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
-import UserBuddies, { BuddyCardProps } from '@/components/ui/UserBuddies.client';
+import UserCard from '@/components/ui/UserCard.client';
+
+function bName(t: any): string {
+  return t?.student_name || t?.user_name || t?.name || 'Traveler';
+}
+
+function getInitials(fullName?: string): string {
+  const safe = String(fullName || '').trim();
+  if (!safe) return 'T';
+  return safe
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((s) => s[0]?.toUpperCase() || '')
+    .join('') || 'T';
+}
 
 interface RecommendationsProps {
   ticketId: string;
@@ -13,9 +27,9 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const [phase, setPhase] = useState<'pre' | 'fetching' | 'done'>('pre');
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<{
-    best_match?: { ticket: any; score: number; date: string; time: string } | null;
-    best_group?: Array<{ ticket: any; score: number; date: string; time: string }> | null;
-    other_alternatives?: any[] | null;
+    best_match?: { ticket: any; user?: { name?: string; batch?: string }; score: number; date: string; time: string } | null;
+    best_group?: Array<{ ticket: any; user?: { name?: string; batch?: string }; score: number; date: string; time: string }> | null;
+    other_alternatives?: Array<{ ticket?: any; user?: { name?: string; batch?: string } }> | null;
   } | null>(null);
 
   useEffect(() => {
@@ -29,6 +43,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
       api.getRecommendations(ticketId)
         .then((res) => {
           if (!mounted) return;
+          // API returns { success, data: { ... } }
           const payload = res?.data ?? res;
           setData(payload);
         })
@@ -53,11 +68,11 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const bestGroup = data?.best_group || [];
   const alternatives = data?.other_alternatives || [];
 
-  const toBuddy = (t: any, score?: number, date?: string, time?: string): BuddyCardProps => {
-    // Name, batch may not always be present; API says recommendations send them when available
-    const name = t?.student_name || t?.user_name || 'Traveler';
-    const batchRaw = t?.student_batch || t?.user_batch;
-    const batch = batchRaw ? String(batchRaw) : 'Student';
+  const toBuddy = (t: any, score?: number, date?: string, time?: string, user?: { name?: string; batch?: string }) => {
+    // Prefer explicit user payload from API, fallback to any ticket-attached fields
+    const name = user?.name || t?.student_name || t?.user_name || t?.name || '';
+    const batchRaw = user?.batch || t?.student_batch || t?.user_batch || t?.batch;
+    const batch = batchRaw ? String(batchRaw) : '';
     let displayTime = time || '—';
     if (!time && date && t?.departure_at) {
       const d = new Date(t.departure_at);
@@ -70,13 +85,12 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     }
     return {
       id: String(t?.id || t?.ticket?.id || Math.random()),
-      name,
-      batch,
+      name: name || 'Traveler',
+      batch: batch || 'Student',
       time: displayTime,
       source: t?.source || t?.ticket?.source || '—',
       destination: t?.destination || t?.ticket?.destination || '—',
-      phone_number: t?.phone_number || t?.ticket?.phone_number,
-      avatarUrl: t?.avatar_url,
+      score,
     };
   };
 
@@ -114,7 +128,15 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestMatch ? (
-          <UserBuddies buddies={[{ ...toBuddy(bestMatch.ticket, bestMatch.score, bestMatch.date, bestMatch.time), score: bestMatch.score }]} />
+          <UserCard
+            initials={getInitials(bestMatch.user?.name || bName(bestMatch.ticket))}
+            name={bestMatch.user?.name || bName(bestMatch.ticket)}
+            batch={bestMatch.user?.batch || 'Student'}
+            score={bestMatch.score}
+            time={bestMatch.time}
+            from={bestMatch.ticket?.source}
+            to={bestMatch.ticket?.destination}
+          />
         ) : (
           <div className="text-white/60">No best match yet</div>
         )}
@@ -132,7 +154,20 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestGroup && bestGroup.length > 0 ? (
-          <UserBuddies buddies={bestGroup.map((m) => ({ ...toBuddy(m.ticket, m.score, m.date, m.time), score: m.score }))} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {bestGroup.map((m, idx) => (
+              <UserCard
+                key={idx}
+                initials={getInitials(m.user?.name || bName(m.ticket))}
+                name={m.user?.name || bName(m.ticket)}
+                batch={m.user?.batch || 'Student'}
+                score={m.score}
+                time={m.time}
+                from={m.ticket?.source}
+                to={m.ticket?.destination}
+              />
+            ))}
+          </div>
         ) : (
           <div className="text-white/60">No group matches yet</div>
         )}
@@ -150,7 +185,19 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {alternatives && alternatives.length > 0 ? (
-          <UserBuddies buddies={alternatives.map((alt: any) => toBuddy(alt.ticket || alt))} />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {alternatives.map((alt: any, idx: number) => (
+              <UserCard
+                key={idx}
+                initials={getInitials(alt.user?.name || bName(alt.ticket || alt))}
+                name={alt.user?.name || bName(alt.ticket || alt)}
+                batch={alt.user?.batch || 'Student'}
+                time={alt.time}
+                from={(alt.ticket || alt)?.source}
+                to={(alt.ticket || alt)?.destination}
+              />
+            ))}
+          </div>
         ) : (
           <div className="text-white/60">No alternatives at the moment</div>
         )}

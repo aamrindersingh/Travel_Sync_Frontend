@@ -780,19 +780,19 @@ button {
 /* Horizontal user buddies - square cards */
 .user-buddies-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   grid-auto-rows: 1fr;
   gap: 12px;
 }
 @media (min-width: 1024px) {
-  .user-buddies-row { grid-template-columns: repeat(6, 1fr); }
+  .user-buddies-row { grid-template-columns: repeat(7, 1fr); }
 }
 .user-card {
   position: relative;
   display: grid;
   grid-template-rows: 1fr auto auto;
   align-items: center;
-  min-height: 150px;
+  min-height: 140px;
   border-radius: 14px;
   padding: 12px;
   background: rgba(255,255,255,0.03);
@@ -840,6 +840,61 @@ button {
   height: 1px;
   width: 100%;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+}
+
+/* Subtle glow utility for pills */
+.glow-soft {
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 0 12px rgba(0, 228, 255, 0.18);
+}
+
+/* Dotted vertical line for route timeline */
+.route-dotted-line {
+  width: 2px;
+  height: 24px;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.5) 33%, rgba(255,255,255,0) 0%);
+  background-position: right;
+  background-size: 2px 6px;
+  background-repeat: repeat-y;
+  opacity: 0.6;
+}
+
+/* Neon themed card + pills */
+.neon-card {
+  position: relative;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+}
+.neon-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(247,147,30,0.25), rgba(37,99,235,0.2));
+  background-size: 200% 200%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0.18;
+  pointer-events: none;
+}
+.neon-pill {
+  border: 1px solid rgba(255,255,255,0.12);
+  background: linear-gradient(135deg, rgba(37,99,235,0.14), rgba(247,147,30,0.12));
+}
+.neon-score {
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(255,255,255,0.06));
+  box-shadow: 0 0 12px rgba(245,158,11,0.25);
+}
+.route-rail {
+  width: 2px;
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.55) 33%, rgba(255,255,255,0) 0%);
+  background-size: 2px 8px;
+  background-repeat: repeat-y;
+  opacity: 0.6;
 }
 
 /* Ticket route chips and subtle neon hover */
