@@ -6,6 +6,7 @@ import clsx from 'clsx';
 type TravelCardProps = {
   name: string;
   subtitle?: string;
+  email?: string;
   avatarUrl?: string;
   initials?: string;
   from: string;
@@ -62,6 +63,7 @@ const Icon = {
 export default function TravelCard({
   name,
   subtitle,
+  email,
   avatarUrl,
   initials,
   from,
@@ -112,6 +114,7 @@ export default function TravelCard({
         <div className="min-w-0">
           <div className="text-lg font-semibold text-white">{name}</div>
           {subtitle ? <div className="text-sm text-gray-400 mt-1">{subtitle}</div> : null}
+          {email ? <div className="text-sm text-gray-400 mt-1 truncate">{email}</div> : null}
         </div>
       </header>
 

@@ -167,6 +167,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             initials={getInitials(bestMatch.user?.name || bName(bestMatch.ticket))}
             name={bestMatch.user?.name || bName(bestMatch.ticket)}
             subtitle={(bestMatch.user?.batch || 'Student')}
+            email={bestMatch.user?.email || bestMatch.ticket?.email}
             from={bestMatch.ticket?.source}
             to={bestMatch.ticket?.destination}
             dateText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
@@ -206,6 +207,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 initials={getInitials(m.user?.name || bName(m.ticket))}
                 name={m.user?.name || bName(m.ticket)}
                 subtitle={(m.user?.batch || 'Student')}
+                email={m.user?.email || m.ticket?.email}
                 from={m.ticket?.source}
                 to={m.ticket?.destination}
                 dateText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
@@ -247,6 +249,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 initials={getInitials(alt.user?.name || bName(alt.ticket || alt))}
                 name={alt.user?.name || bName(alt.ticket || alt)}
                 subtitle={(alt.user?.batch || 'Student')}
+                email={alt.user?.email || (alt.ticket || alt)?.email}
                 from={(alt.ticket || alt)?.source}
                 to={(alt.ticket || alt)?.destination}
                 dateText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
