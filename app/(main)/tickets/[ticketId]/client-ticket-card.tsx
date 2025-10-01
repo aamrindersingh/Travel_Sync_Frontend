@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
 
-type TicketStatus = 'active' | 'completed' | 'cancelled';
+type TicketStatus = 'active' | 'completed' | 'cancelled' | 'open' | 'closed';
 
 interface ClientTicketCardProps {
   ticketId: string;
@@ -24,8 +24,10 @@ function formatTime12h(time24: string): string {
 function getStatusColor(status: TicketStatus) {
   switch (status) {
     case 'active':
+    case 'open':
       return 'text-emerald-300 bg-emerald-500/10 border-emerald-500/30';
     case 'completed':
+    case 'closed':
       return 'text-sky-300 bg-sky-500/10 border-sky-500/30';
     case 'cancelled':
       return 'text-rose-300 bg-rose-500/10 border-rose-500/30';
@@ -78,6 +80,7 @@ export default function ClientTicketCard({ ticketId }: ClientTicketCardProps) {
     if (!iso) return '';
     return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   }, [ticket?.departure_at]);
+
   const formattedTime = useMemo(() => {
     const iso = ticket?.departure_at;
     if (!iso) return '';

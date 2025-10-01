@@ -57,6 +57,19 @@ class ApiClient {
     return res.data;
   }
 
+  async updateTravel(id: string | number, payload: {
+    source?: string;
+    destination?: string;
+    departure_at?: string; // ISO string
+    time_diff_mins?: number;
+    empty_seats?: number;
+    phone_number?: string;
+    status?: 'open' | 'closed' | string;
+  }) {
+    const res = await this.client.put(`/api/travel/${id}`, payload);
+    return res.data;
+  }
+
   // Matches
   async getRecommendations(ticketId: string | number) {
     const res = await this.client.get(`/api/travel/${ticketId}/recommendations`);
@@ -70,6 +83,10 @@ class ApiClient {
   }
 
   // User endpoints
+  async getUser(userId: string | number) {
+    const res = await this.client.get(`/api/user/${userId}`);
+    return res.data;
+  }
   async updateUser(userId: string | number, payload: { name?: string; phone_number?: string }) {
     const res = await this.client.put(`/api/user/${userId}`, payload);
     return res.data;

@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import useAuth from '@/hooks/useAuth.client';
 
 
 // Location constants aligned with backend `constants.go`
@@ -28,6 +29,7 @@ const RAILWAY_STATIONS = [
 
 export default function ClientCreateForm() {
   const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
   const [formData, setFormData] = useState({
     source: '',
     destination: '',
@@ -80,6 +82,25 @@ export default function ClientCreateForm() {
       setFormData((prev) => ({ ...prev, destination: '' }));
     }
   }, [destinationOptions, formData.destination]);
+
+  // Prefill WhatsApp number from user profile
+  useEffect(() => {
+    const prefillPhone = async () => {
+      try {
+        // get current user id
+        const me = await api.getMe();
+        const userId = me?.user_id || me?.id;
+        if (!userId) return;
+        // fetch full user details
+        const details = await api.getUser(userId);
+        const phone = details?.data?.phone_number || details?.phone_number;
+        if (phone) {
+          setFormData((prev) => ({ ...prev, phone: String(phone) }));
+        }
+      } catch {}
+    };
+    prefillPhone();
+  }, []);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
