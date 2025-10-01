@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import Header from "@/components/ui/Header.server";
 import "./globals.css";
 import AuthGuard from "@/components/ui/AuthGuard.client";
+import AmbientBackground from "@/components/ui/AmbientBackground.client";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,6 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <AmbientBackground />
         <Header />
         <AuthGuard>
           <main>{children}</main>

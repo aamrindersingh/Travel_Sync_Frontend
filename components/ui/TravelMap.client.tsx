@@ -16,7 +16,6 @@ export default function TravelMap({ className }: { className?: string }) {
         const path = svg.querySelector(`#path-${index + 1}`) as SVGPathElement;
         if (path) {
           const pathLength = path.getTotalLength();
-          const duration = 3000 + index * 500; // Vary duration
 
           const animate = () => {
             let progress = 0;
@@ -104,6 +103,40 @@ export default function TravelMap({ className }: { className?: string }) {
           repeatCount="indefinite"
         />
       </path>
+
+      {/* Bright static dots that animate along paths */}
+      <circle
+        className="travel-dot"
+        cx="150"
+        cy="100"
+        r="4"
+        fill="#7DF9FF"
+        filter="url(#neonGlow)"
+      />
+      <circle
+        className="travel-dot"
+        cx="150"
+        cy="300"
+        r="4"
+        fill="#FF8FAB"
+        filter="url(#neonGlow)"
+      />
+      <circle
+        className="travel-dot"
+        cx="150"
+        cy="100"
+        r="4"
+        fill="#7CFFEA"
+        filter="url(#neonGlow)"
+      />
+      <circle
+        className="travel-dot"
+        cx="150"
+        cy="300"
+        r="4"
+        fill="#FFE066"
+        filter="url(#neonGlow)"
+      />
 
       <path
         id="path-2"
@@ -195,11 +228,11 @@ export default function TravelMap({ className }: { className?: string }) {
           className="text-white font-bold text-lg"
           fill="white"
         >
-          🏠 Hostel A
+          🏠 Uniworld-1
         </text>
         <text
           x="150"
-          y="140"
+          y="152"
           textAnchor="middle"
           className="text-cyan-300 text-xs"
           fill="#7DD3FC"
@@ -243,11 +276,11 @@ export default function TravelMap({ className }: { className?: string }) {
           className="text-white font-bold text-lg"
           fill="white"
         >
-          🏠 Hostel B
+          🏠 Uniworld-2
         </text>
         <text
           x="150"
-          y="335"
+          y="352"
           textAnchor="middle"
           className="text-pink-300 text-xs"
           fill="#F9A8D4"
@@ -295,7 +328,7 @@ export default function TravelMap({ className }: { className?: string }) {
         </text>
         <text
           x="400"
-          y="140"
+          y="152"
           textAnchor="middle"
           className="text-green-300 text-xs"
           fill="#86EFAC"
@@ -343,7 +376,7 @@ export default function TravelMap({ className }: { className?: string }) {
         </text>
         <text
           x="400"
-          y="335"
+          y="352"
           textAnchor="middle"
           className="text-yellow-300 text-xs"
           fill="#FDE047"

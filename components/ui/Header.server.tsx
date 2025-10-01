@@ -27,7 +27,7 @@ export default function Header() {
       {/* Navigation Links */}
       <div className="hidden md:flex items-center gap-2 relative z-10">
         {[
-          { href: "/find", label: "Find" },
+          { href: "/home", label: "Home" },
           { href: "/tickets", label: "Tickets" },
         ].map((item) => (
           <Link

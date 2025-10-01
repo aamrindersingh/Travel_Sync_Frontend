@@ -28,12 +28,16 @@
 }
 
   body {
-   background: linear-gradient(135deg, #000000 0%, #05070b 92%, #0a1120 100%);
-  background-attachment: fixed;
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  position: relative;
+   /* Minimal background with dominant black */
+   background:
+     radial-gradient(1200px 700px at -10% -20%, rgba(59,130,246,0.04), transparent 60%),
+     radial-gradient(900px 600px at 110% 120%, rgba(16,185,129,0.035), transparent 55%),
+     linear-gradient(135deg, #000000 0%, #06080c 55%, #0a0f14 100%);
+   background-attachment: fixed;
+   color: var(--foreground);
+   font-family: Arial, Helvetica, sans-serif;
+   min-height: 100vh;
+   position: relative;
 }
 
  /* Removed colored overlay for pure black→blue gradient */
@@ -973,12 +977,18 @@ button {
   overflow: hidden;
 }
 
+.ambient-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% 30%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.35) 100%);
+}
+
 .ambient-noise {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
   background-size: 3px 3px;
-  opacity: 0.15;
+  opacity: 0.08;
   mix-blend-mode: overlay;
 }
 
@@ -988,7 +998,7 @@ button {
   height: 42vmin;
   border-radius: 50%;
   filter: blur(40px);
-  opacity: 0.18;
+  opacity: 0.1;
   animation: ambientDrift 18s ease-in-out infinite;
 }
 
@@ -998,12 +1008,7 @@ button {
   background: radial-gradient(circle at 30% 30%, rgba(99,102,241,0.6), rgba(59,130,246,0.15) 60%, transparent 70%);
 }
 
-.ambient-orb-2 {
-  bottom: -10%;
-  right: -10%;
-  background: radial-gradient(circle at 70% 70%, rgba(16,185,129,0.5), rgba(34,197,94,0.12) 60%, transparent 70%);
-  animation-delay: 9s;
-}
+/* Only one orb by default for minimalism */
 
 @keyframes ambientDrift {
   0%, 100% {
