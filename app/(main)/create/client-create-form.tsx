@@ -41,6 +41,8 @@ export default function ClientCreateForm() {
   const [timeDiffMins, setTimeDiffMins] = useState(15);
   const [emptySeats, setEmptySeats] = useState(1);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>('');
 
   // 12-hour time picker parts
   const [timeHour, setTimeHour] = useState('');
@@ -173,6 +175,17 @@ export default function ClientCreateForm() {
       if (createdId) {
         router.push(`/tickets/${createdId}`);
       }
+    } catch (err) {
+      const maybeAxios = err as { response?: { status?: number; data?: { error?: string } } } | undefined;
+      const status = maybeAxios?.response?.status;
+      const backendMsg = maybeAxios?.response?.data?.error;
+      if (status === 400) {
+        // Standardize professional message for duplicate date constraint
+        setModalMessage('You cannot create multiple tickets for the same date.');
+        setShowErrorModal(true);
+      } else {
+        setFormError(backendMsg || 'Failed to create ticket. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -200,6 +213,7 @@ export default function ClientCreateForm() {
 
 
   return (
+    <>
     <form onSubmit={handleSubmit} className="space-y-6 relative">
       {/* Neon glow background effect */}
       <div className="absolute -inset-4 bg-gradient-to-r from-[var(--neon-accent)]/5 via-transparent to-[var(--neon-accent-2)]/5 rounded-3xl blur-xl opacity-30"></div>
@@ -472,5 +486,58 @@ export default function ClientCreateForm() {
         </button>
       </div>
     </form>
+    {showErrorModal ? (
+      <div
+        className="fixed inset-0 z-[100] flex items-center justify-center"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-error-title"
+      >
+        <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowErrorModal(false)} />
+        <div className="relative mx-4 w-full max-w-md rounded-2xl border border-white/10 bg-[#0b0b0b] text-white shadow-2xl shadow-black/60 overflow-hidden">
+          <div className="absolute -inset-px rounded-2xl opacity-20"
+               style={{
+                 background:
+                   'radial-gradient(60% 60% at 100% 0%, rgba(0,228,255,0.20) 0%, rgba(0,0,0,0) 60%), radial-gradient(50% 50% at 0% 100%, rgba(244,63,94,0.18) 0%, rgba(0,0,0,0) 60%)'
+               }}
+               aria-hidden="true"
+          />
+          <div className="relative p-5 sm:p-6">
+            <div className="flex items-start gap-3">
+              <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-rose-500/15 text-rose-300 ring-1 ring-rose-500/30">
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <h3 id="create-error-title" className="text-base font-semibold">Error</h3>
+                <p className="mt-1 text-sm text-white/80">
+                  {modalMessage || 'You cannot create multiple tickets for the same day.'}
+                </p>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-end">
+              <button
+                type="button"
+                onClick={() => setShowErrorModal(false)}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-transform duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                style={{
+                  background: 'linear-gradient(135deg, var(--neon-accent) 0%, var(--neon-accent-2) 100%)',
+                  boxShadow: '0 6px 20px rgba(0, 228, 255, 0.35)'
+                }}
+                onMouseDown={(e) => e.currentTarget.classList.add('translate-y-0.5')}
+                onMouseUp={(e) => e.currentTarget.classList.remove('translate-y-0.5')}
+                onMouseLeave={(e) => e.currentTarget.classList.remove('translate-y-0.5')}
+              >
+                Okay
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }
