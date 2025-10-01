@@ -142,7 +142,6 @@ export default function ClientTicketCard({ ticketId }: ClientTicketCardProps) {
 
       <div className="mt-6 flex items-center justify-between text-sm text-white/60">
         <span>Empty seats: {ticket.empty_seats}</span>
-        <svg className="w-5 h-5 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
       </div>
     </div>
   );

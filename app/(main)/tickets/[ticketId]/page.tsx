@@ -22,7 +22,7 @@ export default async function TicketPage({ params }: TicketPageProps) {
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            Ticket <span className="neon-text">#{ticketId}</span>
+            Ticket
           </h1>
           <p className="text-xl text-white/70">
             Find your perfect travel companions for this journey
