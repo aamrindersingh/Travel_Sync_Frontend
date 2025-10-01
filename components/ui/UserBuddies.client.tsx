@@ -10,6 +10,8 @@ export interface BuddyCardProps {
   source: string;
   destination: string;
   phone_number?: string;
+  avatarUrl?: string;
+  score?: number; // 0..1
 }
 
 const DUMMY_BUDDIES: BuddyCardProps[] = [
@@ -20,6 +22,15 @@ const DUMMY_BUDDIES: BuddyCardProps[] = [
 ];
 
 export default function UserBuddies({ buddies }: { buddies?: BuddyCardProps[] }) {
+  const getInitials = (fullName: string) => {
+    const parts = String(fullName || '')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2);
+    const letters = parts.map((p) => p[0]?.toUpperCase() || '').join('');
+    return letters || 'T';
+  };
+
   return (
     <div className="user-buddies-row">
       {(buddies && buddies.length > 0 ? buddies : DUMMY_BUDDIES).map((b) => (
@@ -29,14 +40,37 @@ export default function UserBuddies({ buddies }: { buddies?: BuddyCardProps[] })
           className="user-card"
           target="_blank"
         >
-          <div className="user-avatar" />
-          <div className="user-meta">
-            <div className="user-name">{b.name}</div>
-            <div className="user-batch">{b.batch}</div>
-          </div>
-          <div className="user-info">
-            <div className="user-time">{b.time}</div>
-            <div className="user-route">{b.source} → {b.destination}</div>
+          <div className="flex items-center gap-3 w-full">
+            {/* Avatar */}
+            {b.avatarUrl ? (
+              <img src={b.avatarUrl} alt={b.name} className="w-12 h-12 rounded-xl object-cover ring-1 ring-white/10" />
+            ) : (
+              <div className="w-12 h-12 rounded-xl bg-white/10 text-white/80 flex items-center justify-center font-semibold ring-1 ring-white/10">
+                {getInitials(b.name)}
+              </div>
+            )}
+
+            {/* Meta */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <div className="truncate">
+                  <div className="user-name text-white font-semibold truncate">{b.name || 'Traveler'}</div>
+                  <div className="user-batch text-white/60 text-xs">{b.batch || 'Student'}</div>
+                </div>
+                {typeof b.score === 'number' && (
+                  <span className="px-2 py-0.5 text-xs rounded-md bg-[var(--neon-accent)]/20 text-[var(--neon-accent)] border border-[var(--neon-accent)]/30">
+                    {Math.round(b.score * 100)}% match
+                  </span>
+                )}
+              </div>
+
+              <div className="mt-2 flex items-center justify-between text-[13px] text-white/80">
+                <span className="px-2 py-0.5 rounded-md bg-white/5 border border-white/10">{b.time}</span>
+                <span className="user-route truncate ml-3 text-right">
+                  {b.source} → {b.destination}
+                </span>
+              </div>
+            </div>
           </div>
         </Link>
       ))}

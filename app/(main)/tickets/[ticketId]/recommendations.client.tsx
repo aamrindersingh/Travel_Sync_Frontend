@@ -54,17 +54,29 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const alternatives = data?.other_alternatives || [];
 
   const toBuddy = (t: any, score?: number, date?: string, time?: string): BuddyCardProps => {
-    // We don't have user name/batch data in ticket response; placeholder name.
-    const name = t?.student_name || 'Traveler';
-    const batch = t?.student_batch ? `Batch ${t.student_batch}` : 'Student';
+    // Name, batch may not always be present; API says recommendations send them when available
+    const name = t?.student_name || t?.user_name || 'Traveler';
+    const batchRaw = t?.student_batch || t?.user_batch;
+    const batch = batchRaw ? String(batchRaw) : 'Student';
+    let displayTime = time || '—';
+    if (!time && date && t?.departure_at) {
+      const d = new Date(t.departure_at);
+      const hh = String(d.getHours()).padStart(2, '0');
+      const mm = String(d.getMinutes()).padStart(2, '0');
+      const hNum = parseInt(hh, 10);
+      const ampm = hNum >= 12 ? 'PM' : 'AM';
+      const h12 = hNum % 12 || 12;
+      displayTime = `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
+    }
     return {
       id: String(t?.id || t?.ticket?.id || Math.random()),
       name,
       batch,
-      time: time || '—',
+      time: displayTime,
       source: t?.source || t?.ticket?.source || '—',
       destination: t?.destination || t?.ticket?.destination || '—',
       phone_number: t?.phone_number || t?.ticket?.phone_number,
+      avatarUrl: t?.avatar_url,
     };
   };
 
@@ -102,7 +114,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestMatch ? (
-          <UserBuddies buddies={[toBuddy(bestMatch.ticket, bestMatch.score, bestMatch.date, bestMatch.time)]} />
+          <UserBuddies buddies={[{ ...toBuddy(bestMatch.ticket, bestMatch.score, bestMatch.date, bestMatch.time), score: bestMatch.score }]} />
         ) : (
           <div className="text-white/60">No best match yet</div>
         )}
@@ -120,7 +132,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestGroup && bestGroup.length > 0 ? (
-          <UserBuddies buddies={bestGroup.map((m) => toBuddy(m.ticket, m.score, m.date, m.time))} />
+          <UserBuddies buddies={bestGroup.map((m) => ({ ...toBuddy(m.ticket, m.score, m.date, m.time), score: m.score }))} />
         ) : (
           <div className="text-white/60">No group matches yet</div>
         )}
