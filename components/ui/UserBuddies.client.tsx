@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 
-interface BuddyCardProps {
+export interface BuddyCardProps {
   id: string;
   name: string;
   batch: string;
   time: string; // 12h format string
   source: string;
   destination: string;
+  phone_number?: string;
 }
 
 const DUMMY_BUDDIES: BuddyCardProps[] = [
@@ -18,13 +19,13 @@ const DUMMY_BUDDIES: BuddyCardProps[] = [
   { id: "4", name: "Sara Lee", batch: "IT '27", time: "12:45 PM", source: "KSR Train", destination: "Terminal-1" },
 ];
 
-export default function UserBuddies() {
+export default function UserBuddies({ buddies }: { buddies?: BuddyCardProps[] }) {
   return (
     <div className="user-buddies-row">
-      {DUMMY_BUDDIES.map((b) => (
+      {(buddies && buddies.length > 0 ? buddies : DUMMY_BUDDIES).map((b) => (
         <Link
           key={b.id}
-          href={`https://wa.me/0000000000`}
+          href={`https://wa.me/${(b.phone_number || '').replace(/\D/g, '') || '0000000000'}`}
           className="user-card"
           target="_blank"
         >

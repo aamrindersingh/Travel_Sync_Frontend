@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
+import UserBuddies, { BuddyCardProps } from '@/components/ui/UserBuddies.client';
 
 interface RecommendationsProps {
   ticketId: string;
@@ -52,6 +53,21 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const bestGroup = data?.best_group || [];
   const alternatives = data?.other_alternatives || [];
 
+  const toBuddy = (t: any, score?: number, date?: string, time?: string): BuddyCardProps => {
+    // We don't have user name/batch data in ticket response; placeholder name.
+    const name = t?.student_name || 'Traveler';
+    const batch = t?.student_batch ? `Batch ${t.student_batch}` : 'Student';
+    return {
+      id: String(t?.id || t?.ticket?.id || Math.random()),
+      name,
+      batch,
+      time: time || '—',
+      source: t?.source || t?.ticket?.source || '—',
+      destination: t?.destination || t?.ticket?.destination || '—',
+      phone_number: t?.phone_number || t?.ticket?.phone_number,
+    };
+  };
+
   if (loading || phase !== 'done') {
     return (
       <div className="frosted-card">
@@ -86,18 +102,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestMatch ? (
-          <div className="bg-white/5 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-white font-semibold">Ticket #{bestMatch.ticket?.id}</div>
-                <div className="text-white/70 text-sm">{bestMatch.ticket?.source} → {bestMatch.ticket?.destination}</div>
-              </div>
-              <span className="px-3 py-1 rounded-full text-sm font-medium bg-[var(--neon-accent)]/20 text-[var(--neon-accent)] border border-[var(--neon-accent)]/30">
-                {(bestMatch.score * 100).toFixed(0)}% match
-              </span>
-            </div>
-            <div className="mt-3 text-white/60 text-sm">{bestMatch.date} at {bestMatch.time}</div>
-          </div>
+          <UserBuddies buddies={[toBuddy(bestMatch.ticket, bestMatch.score, bestMatch.date, bestMatch.time)]} />
         ) : (
           <div className="text-white/60">No best match yet</div>
         )}
@@ -115,22 +120,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestGroup && bestGroup.length > 0 ? (
-          <div className="space-y-4">
-            {bestGroup.map((m, i) => (
-              <div key={i} className="bg-white/5 rounded-xl p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-white font-semibold">Ticket #{m.ticket?.id}</div>
-                    <div className="text-white/70 text-sm">{m.ticket?.source} → {m.ticket?.destination}</div>
-                  </div>
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-[var(--neon-accent)]/20 text-[var(--neon-accent)] border border-[var(--neon-accent)]/30">
-                    {(m.score * 100).toFixed(0)}% match
-                  </span>
-                </div>
-                <div className="mt-3 text-white/60 text-sm">{m.date} at {m.time}</div>
-              </div>
-            ))}
-          </div>
+          <UserBuddies buddies={bestGroup.map((m) => toBuddy(m.ticket, m.score, m.date, m.time))} />
         ) : (
           <div className="text-white/60">No group matches yet</div>
         )}
@@ -148,14 +138,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {alternatives && alternatives.length > 0 ? (
-          <div className="space-y-4">
-            {alternatives.map((alt, i) => (
-              <div key={i} className="bg-white/5 rounded-xl p-6">
-                <div className="text-white">Ticket #{alt?.ticket?.id || alt?.id}</div>
-                <div className="text-white/70 text-sm">{alt?.ticket?.source || alt?.source} → {alt?.ticket?.destination || alt?.destination}</div>
-              </div>
-            ))}
-          </div>
+          <UserBuddies buddies={alternatives.map((alt: any) => toBuddy(alt.ticket || alt))} />
         ) : (
           <div className="text-white/60">No alternatives at the moment</div>
         )}

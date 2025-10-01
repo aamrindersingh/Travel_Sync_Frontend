@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 
 interface TravelTicket {
@@ -52,7 +52,7 @@ export default function TicketListClient() {
     setLoading(true);
     setError(null);
     api
-      .getTravels()
+      .getMyTravels()
       .then((res) => {
         if (!mounted) return;
         const data = (res?.data ?? res) as { success?: boolean; data?: TravelTicket[] } | TravelTicket[];

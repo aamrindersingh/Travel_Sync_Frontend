@@ -47,6 +47,11 @@ class ApiClient {
     return res.data;
   }
 
+  async getMyTravels() {
+    const res = await this.client.get('/api/travel/my');
+    return res.data;
+  }
+
   async getTravel(id: string | number) {
     const res = await this.client.get(`/api/travel/${id}`);
     return res.data;
