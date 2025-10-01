@@ -6,7 +6,7 @@ interface Ticket {
   source: string;
   destination: string;
   date: string;
-  time: string;
+  time: string; // expects HH:mm (24h) or already 12h
   transportMode: string;
   status: 'active' | 'completed' | 'cancelled';
   matchesCount: number;
@@ -14,6 +14,18 @@ interface Ticket {
 
 interface TicketListProps {
   tickets?: Ticket[];
+}
+
+function formatTime12h(time24: string): string {
+  // Accepts "HH:mm" or already formatted strings
+  if (!/^[0-2]?\d:\d{2}$/.test(time24)) return time24;
+  const [hStr, mStr] = time24.split(":");
+  let h = parseInt(hStr, 10);
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  if (h === 0) h = 12;
+  const hh = String(h).padStart(2, "0");
+  return `${hh}:${mStr} ${ampm}`;
 }
 
 export default function TicketList({ tickets = [] }: TicketListProps) {
@@ -90,47 +102,40 @@ export default function TicketList({ tickets = [] }: TicketListProps) {
           </Link>
         </div>
       ) : (
-        displayTickets.map((ticket) => (
-          <div key={ticket.id} className="group ticket-modern p-6">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-[var(--neon-accent)] transition-colors">
-                  {ticket.source} → {ticket.destination}
-                </h3>
-                <p className="text-white/70">
-                  {new Date(ticket.date).toLocaleDateString()} at {ticket.time}
-                </p>
-              </div>
-              <div className="flex items-center">
+        displayTickets.map((ticket) => {
+          const formattedDate = new Date(ticket.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+          const formattedTime = formatTime12h(ticket.time);
+          return (
+            <Link key={ticket.id} href={`/tickets/${ticket.id}`} className="block group ticket-modern p-6 cursor-pointer">
+              <div className="flex justify-between items-start mb-4">
+                <div className="min-w-0">
+                  <h3 className="text-xl font-semibold text-white group-hover:text-[var(--neon-accent)] transition-colors truncate">
+                    {ticket.source} → {ticket.destination}
+                  </h3>
+                </div>
                 <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border tracking-wide uppercase ${getStatusColor(ticket.status)}`}>
                   {ticket.status}
                 </span>
               </div>
-            </div>
 
-            <div className="mb-6 text-white/80 text-sm">
-              <span className="text-white/60">Time:</span> {ticket.time}
-            </div>
+              <div className="flex items-center gap-4 text-sm text-white/80">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <span>{formattedDate}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span>{formattedTime}</span>
+                </div>
+              </div>
 
-            <div className="ticket-divider mb-4"></div>
-            <div className="flex justify-between items-center">
-              <div className="text-sm text-white/60">
-                Created {new Date().toLocaleDateString()}
+              <div className="mt-6 flex items-center justify-between text-sm text-white/60">
+                <span>Created {new Date().toLocaleDateString()}</span>
+                <svg className="w-5 h-5 text-white/40 group-hover:text-[var(--neon-accent)] transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
               </div>
-              <div className="flex space-x-4">
-                <Link
-                  href={`/tickets/${ticket.id}`}
-                  className="text-[var(--neon-accent)] hover:text-[var(--neon-accent-2)] font-medium transition-colors"
-                >
-                  View Details →
-                </Link>
-                <button className="text-white/60 hover:text-white font-medium transition-colors">
-                  Edit
-                </button>
-              </div>
-            </div>
-          </div>
-        ))
+            </Link>
+          );
+        })
       )}
     </div>
   );

@@ -2,8 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/ui/Header.server";
-import AmbientBackground from "@/components/ui/AmbientBackground.client";
 import "./globals.css";
+import AuthGuard from "@/components/ui/AuthGuard.client";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,9 +36,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AmbientBackground />
         <Header />
-        <main>{children}</main>
+        <AuthGuard>
+          <main>{children}</main>
+        </AuthGuard>
       </body>
     </html>
   );

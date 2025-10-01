@@ -9,11 +9,11 @@ export default function TicketsPage() {
     <div className="min-h-screen py-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            My <span className="neon-text">Travel Tickets</span>
+          <h1 className="text-5xl font-bold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-cyan-300">
+            My Travel Tickets
           </h1>
-          <p className="text-xl text-white/70 max-w-2xl">
-            Manage your travel tickets and connect with fellow travelers
+          <p className="text-lg text-white/70 max-w-2xl">
+            Review and manage your trips. Join or edit details with a click.
           </p>
         </div>
         
