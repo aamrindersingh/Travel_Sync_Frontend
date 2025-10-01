@@ -2,6 +2,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import api from '@/lib/api';
 
 
 export default function ClientCreateForm() {
@@ -13,6 +14,8 @@ export default function ClientCreateForm() {
     phone: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [timeDiffMins, setTimeDiffMins] = useState(15);
+  const [emptySeats, setEmptySeats] = useState(1);
 
   // 12-hour time picker parts
   const [timeHour, setTimeHour] = useState('');
@@ -42,15 +45,37 @@ export default function ClientCreateForm() {
       // basic guard; UI prevents this already
       return;
     }
-    // Ensure time is composed in 12-hour format
-    const composedTime = `${timeHour.padStart(2, '0')}:${timeMinute.padStart(2, '0')} ${timeAmPm}`;
-    setFormData(prev => ({ ...prev, time: composedTime }));
+    // Build ISO departure time from date + 12h time parts
+    const minute = parseInt(timeMinute || '0', 10) || 0;
+    let hour = parseInt(timeHour || '0', 10) || 0;
+    const ampm = timeAmPm;
+    if (ampm === 'AM') {
+      if (hour === 12) hour = 0;
+    } else if (ampm === 'PM') {
+      if (hour !== 12) hour = hour + 12;
+    }
+    const [y, m, d] = (formData.date || '').split('-').map((x) => parseInt(x, 10));
+    if (!y || !m || !d || !hour || isNaN(minute)) {
+      return;
+    }
+
+    const departure = new Date(y, (m - 1), d, hour, minute, 0, 0).toISOString();
+    const phoneDigits = (formData.phone || '').replace(/\D/g, '');
+
     setIsSubmitting(true);
-    // TODO: Implement form validation
-    // TODO: Call API to create ticket
-    // TODO: Handle optimistic UI updates
-    // TODO: Redirect to new ticket page
-    setTimeout(() => setIsSubmitting(false), 1000); // Mock submission
+    try {
+      await api.createTravel({
+        source: formData.source,
+        destination: formData.destination,
+        departure_at: departure,
+        time_diff_mins: timeDiffMins,
+        empty_seats: emptySeats,
+        phone_number: phoneDigits,
+      });
+      // TODO: Navigate to tickets or show success toast
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -216,6 +241,56 @@ export default function ClientCreateForm() {
               </div>
             </div>
             {/* removed overlapping clock icon */}
+          </div>
+        </div>
+      </div>
+
+      {/* Time Difference Slider */}
+      <div className="relative z-10">
+        <label className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
+          Acceptable Time Difference
+          <span className="ml-2 text-[var(--neon-accent)] font-bold">{timeDiffMins} mins</span>
+        </label>
+        <div className="relative px-2 py-4 rounded-xl bg-white/5 border border-white/10">
+          <input
+            type="range"
+            min={0}
+            max={120}
+            step={5}
+            value={timeDiffMins}
+            onChange={(e) => setTimeDiffMins(parseInt(e.target.value, 10))}
+            className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[var(--neon-accent)]"
+          />
+          <div className="flex justify-between text-xs text-white/60 mt-2">
+            <span>0</span>
+            <span>30</span>
+            <span>60</span>
+            <span>90</span>
+            <span>120</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Empty Seats */}
+      <div className="relative z-10">
+        <label className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
+          Empty Seats
+        </label>
+        <div className="relative">
+          <select
+            aria-label="Empty Seats"
+            value={emptySeats}
+            onChange={(e) => setEmptySeats(parseInt(e.target.value, 10))}
+            className="w-full px-4 py-3 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+          >
+            {[1,2,3,4,5,6].map((n) => (
+              <option key={n} value={n} className="bg-[#0a0a0a]">{n}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-white/60">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"/></svg>
           </div>
         </div>
       </div>

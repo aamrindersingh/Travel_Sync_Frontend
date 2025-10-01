@@ -1,6 +1,7 @@
 // server
 import Link from "next/link";
 import TravelMap from "@/components/ui/TravelMap.client";
+import OnboardingGate from "./onboarding-gate.client";
 
 // SSG: set revalidate = 3600 (1 hour) or as needed
 export const revalidate = 3600;
@@ -12,6 +13,7 @@ export default function HomePage() {
 
   return (
     <div className="home-page-container">
+      <OnboardingGate />
       <section className="relative h-full flex flex-col lg:flex-row items-center justify-center gap-x-16 lg:gap-x-32 py-10">
         {/* Left Content */}
         <div className="basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 ml-40 lg:ml-56 xl:ml-64">

@@ -1,20 +1,18 @@
-// client
 'use client';
 
-import useAuth from '@/hooks/useAuth.client';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import useAuth from '@/hooks/useAuth.client';
 
-export default function ClientLogin() {
-  const { isAuthenticated, isLoading, user, loginWithGoogle, logout } = useAuth();
+export default function AuthSuccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isAuthenticated, isLoading, user, logout } = useAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [name, setName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
 
   const isFirstLogin = useMemo(() => {
-    // Prefer URL param ?new=1; fallback to a non-httpOnly cookie if present
     const fromQuery = searchParams?.get('new') === '1';
     let fromCookie = false;
     if (typeof document !== 'undefined') {
@@ -25,7 +23,8 @@ export default function ClientLogin() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) return; // wait for auth
+
     if (isFirstLogin) {
       setShowOnboarding(true);
     } else {
@@ -33,45 +32,21 @@ export default function ClientLogin() {
     }
   }, [isLoading, isAuthenticated, isFirstLogin, router]);
 
-  const displayName = (() => {
-    if (!user?.email) return '';
-    const localPart = String(user.email).split('@')[0];
-    return localPart.charAt(0).toUpperCase() + localPart.slice(1);
-  })();
-
-  if (isLoading) {
-    return (
-      <div className="mt-8 flex items-center justify-center text-gray-600">
-        Checking your session...
-      </div>
-    );
-  }
-
-  if (isAuthenticated) {
-    return (
-      <div className="mt-8">
-        <div className="rounded-lg border border-gray-200 p-6 shadow-sm bg-white">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold">
-              {displayName ? displayName[0] : 'U'}
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Signed in as</p>
-              <p className="text-lg font-semibold text-gray-900">{displayName || 'User'}</p>
-              <p className="text-sm text-gray-600">{user?.email}</p>
-            </div>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+      <div className="relative w-full max-w-lg p-8 text-center">
+        <div className="absolute -inset-10 bg-gradient-to-r from-[var(--neon-accent)]/10 via-transparent to-[var(--neon-accent-2)]/10 rounded-3xl blur-2xl opacity-50"></div>
+        <div className="relative">
+          <div className="mx-auto w-16 h-16 rounded-full bg-[var(--neon-accent)]/20 border border-[var(--neon-accent)]/40 flex items-center justify-center animate-pulse">
+            <svg className="w-8 h-8 text-[var(--neon-accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3" />
+            </svg>
           </div>
-          <div className="mt-6">
-            <button
-              onClick={logout}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign out
-            </button>
-          </div>
+          <h2 className="mt-6 text-2xl font-bold text-white">Signing you in…</h2>
+          <p className="mt-2 text-white/70">Preparing your TravelSync experience</p>
         </div>
 
-        {showOnboarding && (
+        {isAuthenticated && showOnboarding && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="absolute inset-0 bg-black/60" onClick={() => setShowOnboarding(false)}></div>
             <div className="relative z-10 w-full max-w-lg mx-auto p-6 rounded-2xl bg-[#0a0a0a] border border-white/10">
@@ -138,7 +113,6 @@ export default function ClientLogin() {
                   <button
                     onClick={() => {
                       // TODO: POST profile to backend when endpoint is available
-                      // Clear any temporary flag and proceed
                       if (typeof document !== 'undefined') {
                         document.cookie = 'first_login=; Max-Age=0; Path=/';
                       }
@@ -158,18 +132,8 @@ export default function ClientLogin() {
           </div>
         )}
       </div>
-    );
-  }
-
-  return (
-    <div className="mt-8 space-y-6">
-      <button
-        onClick={loginWithGoogle}
-        className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        Continue with Google
-      </button>
-      <p className="text-center text-xs text-gray-500">Use your @sst.scaler.com account</p>
     </div>
   );
 }
+
+

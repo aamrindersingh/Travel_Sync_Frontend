@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import useAuth from "@/hooks/useAuth.client";
 
 const PUBLIC_PATHS = new Set<string>([
-  "/", "/home", "/find", "/health", "/auth/google/login", "/auth/google/callback",
+  "/", "/home", "/find", "/health", "/auth/google/login", "/auth/google/callback", "/auth/success",
 ]);
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
