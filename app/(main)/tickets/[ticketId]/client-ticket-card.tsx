@@ -112,7 +112,10 @@ export default function ClientTicketCard({ ticketId }: ClientTicketCardProps) {
   if (!ticket) return null;
 
   return (
-    <div className="ticket-modern p-6">
+    <div
+      className="ticket-modern ticket-selected p-6"
+      style={{ transform: 'none', boxShadow: 'none' }}
+    >
       <div className="flex justify-between items-start mb-4">
         <div className="min-w-0">
           <h3 className="text-xl font-semibold text-white truncate">

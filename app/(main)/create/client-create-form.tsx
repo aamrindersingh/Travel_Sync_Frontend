@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth.client';
+import { useRef } from 'react';
 
 
 // Location constants aligned with backend `constants.go`
@@ -29,7 +30,8 @@ const RAILWAY_STATIONS = [
 
 export default function ClientCreateForm() {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const prefilledOnce = useRef(false);
   const [formData, setFormData] = useState({
     source: '',
     destination: '',
@@ -40,6 +42,7 @@ export default function ClientCreateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [timeDiffMins, setTimeDiffMins] = useState(15);
   const [emptySeats, setEmptySeats] = useState(1);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // 12-hour time picker parts
   const [timeHour, setTimeHour] = useState('');
@@ -89,29 +92,55 @@ export default function ClientCreateForm() {
       try {
         // get current user id
         const me = await api.getMe();
+        console.log('[create] /auth/me response:', me);
         const userId = me?.user_id || me?.id;
         if (!userId) return;
         // fetch full user details
         const details = await api.getUser(userId);
-        const phone = details?.data?.phone_number || details?.phone_number;
+        console.log('[create] /api/user/:id response:', details);
+        const phone =
+          // backend may return camel, snake or Pascal case
+          details?.data?.phone_number ||
+          details?.phone_number ||
+          details?.data?.PhoneNumber ||
+          (details?.data && (details.data as any).PhoneNumber) ||
+          (details as any)?.PhoneNumber ||
+          me?.phone_number;
+        console.log('[create] extracted phone before parse:', phone);
         if (phone) {
-          setFormData((prev) => ({ ...prev, phone: String(phone) }));
+          const raw = String(phone).replace(/\D/g, '');
+          const ten = raw.length >= 10 ? raw.slice(-10) : raw;
+          console.log('[create] parsed phone (last 10):', ten);
+          if (ten && ten.length > 0) {
+            setFormData((prev) => ({ ...prev, phone: ten }));
+          }
         }
-      } catch {}
+      } catch (err) {
+        console.log('[create] prefillPhone error:', err);
+      }
     };
-    prefillPhone();
-  }, []);
+    if (!prefilledOnce.current && !formData.phone) {
+      prefilledOnce.current = true;
+      prefillPhone();
+    }
+  }, [formData.phone]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
     if (formData.source === formData.destination) {
-      // basic guard; UI prevents this already
+      setFormError('Source and destination must be different.');
+      return;
+    }
+    // Validate presence of required fields (including 12h time parts)
+    if (!formData.source || !formData.destination || !formData.date || !timeHour || !timeMinute || !timeAmPm) {
+      setFormError('Please fill all fields.');
       return;
     }
     // Build ISO departure time from date + 12h time parts
-    const minute = parseInt(timeMinute || '0', 10) || 0;
-    let hour = parseInt(timeHour || '0', 10) || 0;
+    const minute = parseInt(timeMinute, 10);
+    let hour = parseInt(timeHour, 10);
     const ampm = timeAmPm;
     if (ampm === 'AM') {
       if (hour === 12) hour = 0;
@@ -119,12 +148,17 @@ export default function ClientCreateForm() {
       if (hour !== 12) hour = hour + 12;
     }
     const [y, m, d] = (formData.date || '').split('-').map((x) => parseInt(x, 10));
-    if (!y || !m || !d || !hour || isNaN(minute)) {
+    if (!y || !m || !d || isNaN(minute) || isNaN(hour)) {
+      setFormError('Please provide a valid date and time.');
       return;
     }
 
     const departure = new Date(y, (m - 1), d, hour, minute, 0, 0).toISOString();
-    const phoneDigits = (formData.phone || '').replace(/\D/g, '');
+    const phoneDigits = (formData.phone || '').replace(/\D/g, '').slice(0, 10);
+    if (phoneDigits.length !== 10) {
+      setFormError('Contact number must be exactly 10 digits.');
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -146,9 +180,14 @@ export default function ClientCreateForm() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    let next = value;
+    if (name === 'phone') {
+      next = value.replace(/\D/g, '').slice(0, 10);
+    }
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: next
     }));
   };
 
@@ -376,6 +415,11 @@ export default function ClientCreateForm() {
             value={formData.phone}
             onChange={handleChange}
             className="w-full px-4 py-3 pl-12 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400/30 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 hover:bg-green-500/15 group-hover:border-green-400/50 focus:shadow-[0_0_20px_rgba(34,197,94,0.4)]"
+            inputMode="numeric"
+            autoComplete="tel"
+            pattern="[0-9]{10}"
+            minLength={10}
+            maxLength={10}
             placeholder="Your WhatsApp number"
             required
           />
@@ -387,6 +431,9 @@ export default function ClientCreateForm() {
           <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
           <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-green-500/20 to-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm pointer-events-none"></div>
         </div>
+        {formError && (
+          <p className="mt-2 text-sm text-rose-300">{formError}</p>
+        )}
       </div>
 
       {/* Submit Button */}
