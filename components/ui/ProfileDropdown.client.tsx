@@ -68,7 +68,7 @@ export default function ProfileDropdown() {
           height="20"
           viewBox="0 0 48 48"
           aria-hidden="true"
-          shape-rendering="geometricPrecision"
+          shapeRendering="geometricPrecision"
           className="shrink-0 block"
         >
           <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.2 33.9 29 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.3 0 6.3 1.2 8.6 3.3l5.7-5.7C34.6 5.1 29.6 3 24 3 12.3 3 3 12.3 3 24s9.3 21 21 21 21-9.3 21-21c0-1.2-.1-2.3-.4-3.5z"/>

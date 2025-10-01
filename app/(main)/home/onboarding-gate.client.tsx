@@ -14,8 +14,8 @@ export default function OnboardingGate() {
   const [whatsapp, setWhatsapp] = useState('');
   const [saving, setSaving] = useState(false);
   const trimmedName = name.trim();
-  const sanitizedWhatsapp = whatsapp.replace(/\D/g, '').trim();
-  const isWhatsappValid = /^\d{8,15}$/.test(sanitizedWhatsapp);
+  const sanitizedWhatsapp = whatsapp.replace(/\D/g, '').slice(0, 10);
+  const isWhatsappValid = /^\d{10}$/.test(sanitizedWhatsapp);
   const isFormValid = trimmedName.length > 0 && isWhatsappValid;
 
   const isFirstLogin = useMemo(() => {
@@ -80,9 +80,14 @@ export default function OnboardingGate() {
                   id="onb-whatsapp"
                   type="tel"
                   value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
+                  onChange={(e) => setWhatsapp(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   className="w-full px-4 py-3 pl-12 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400/30 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 transition-all duration-300 hover:bg-green-500/15 group-hover:border-green-400/50 focus:shadow-[0_0_20px_rgba(34,197,94,0.4)]"
-                  placeholder="Digits only, e.g. 9876543210"
+                  inputMode="numeric"
+                  autoComplete="tel"
+                  pattern="[0-9]{10}"
+                  minLength={10}
+                  maxLength={10}
+                  placeholder="WhatsApp (10 digits)"
                   required
                 />
                 <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-green-400">
