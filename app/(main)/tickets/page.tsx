@@ -1,5 +1,5 @@
 // server
-import TicketList from '@/components/ui/TicketList.server';
+import TicketListClient from '@/components/ui/TicketList.client';
 
 export default function TicketsPage() {
   // TODO: call backend to fetch user's tickets
@@ -17,7 +17,7 @@ export default function TicketsPage() {
           </p>
         </div>
         
-        <TicketList />
+        <TicketListClient />
       </div>
     </div>
   );

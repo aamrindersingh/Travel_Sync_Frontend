@@ -1,11 +1,33 @@
 // client
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
+
+// Location constants aligned with backend `constants.go`
+const HOSTELS = [
+  'Uniworld-1',
+  'Uniworld-2',
+] as const;
+
+const AIRPORT_TERMINALS = [
+  'Kempegowda International Airport Terminal-1',
+  'Kempegowda International Airport Terminal-2',
+] as const;
+
+const RAILWAY_STATIONS = [
+  'KSR SBC Bengaluru Junction',
+  'SMVT Bengaluru railway station',
+  'Krishnarajapuram Railway Station',
+  'Yesvantpur Junction Railway station',
+  'Banglore Cantonment Railway Station',
+  'Bengaluru East Railway Station',
+] as const;
 
 export default function ClientCreateForm() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     source: '',
     destination: '',
@@ -22,21 +44,42 @@ export default function ClientCreateForm() {
   const [timeMinute, setTimeMinute] = useState('');
   const [timeAmPm, setTimeAmPm] = useState('');
 
-  const locationOptions = useMemo(
+  const allLocations = useMemo(
     () => [
-      'Kempegowda Airport (Terminal-1)',
-      'Kempegowda Airport (Terminal-2)',
-      'KSR Train',
-      'Uniworld-1',
-      'Uniworld-2'
+      ...AIRPORT_TERMINALS,
+      ...RAILWAY_STATIONS,
+      ...HOSTELS,
     ],
     []
   );
 
-  const destinationOptions = useMemo(
-    () => locationOptions.filter((opt) => opt !== formData.source),
-    [locationOptions, formData.source]
-  );
+  const destinationOptions = useMemo(() => {
+    const src = formData.source;
+    if (!src) return allLocations;
+
+    const isAirport = AIRPORT_TERMINALS.includes(src as typeof AIRPORT_TERMINALS[number]);
+    const isHostel = HOSTELS.includes(src as typeof HOSTELS[number]);
+
+    // Rule 1: If source is an airport terminal, destination should only show hostels
+    if (isAirport) {
+      return [...HOSTELS];
+    }
+
+    // Rule 2: If source is a hostel, destination should show airport terminals and railway stations
+    if (isHostel) {
+      return [...AIRPORT_TERMINALS, ...RAILWAY_STATIONS];
+    }
+
+    // Default: filter out the selected source
+    return allLocations.filter((opt) => opt !== src);
+  }, [formData.source, allLocations]);
+
+  // If destination becomes invalid after changing source rules, reset it
+  useEffect(() => {
+    if (formData.destination && !destinationOptions.includes(formData.destination)) {
+      setFormData((prev) => ({ ...prev, destination: '' }));
+    }
+  }, [destinationOptions, formData.destination]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -64,7 +107,7 @@ export default function ClientCreateForm() {
 
     setIsSubmitting(true);
     try {
-      await api.createTravel({
+      const result = await api.createTravel({
         source: formData.source,
         destination: formData.destination,
         departure_at: departure,
@@ -72,7 +115,10 @@ export default function ClientCreateForm() {
         empty_seats: emptySeats,
         phone_number: phoneDigits,
       });
-      // TODO: Navigate to tickets or show success toast
+      const createdId = result?.data?.id ?? result?.id;
+      if (createdId) {
+        router.push(`/tickets/${createdId}`);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -116,7 +162,7 @@ export default function ClientCreateForm() {
               required
             >
               <option value="" disabled>Select source</option>
-              {locationOptions.map((opt) => (
+              {allLocations.map((opt) => (
                 <option key={opt} value={opt} className="bg-[#0a0a0a]">{opt}</option>
               ))}
             </select>
