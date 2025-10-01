@@ -70,6 +70,11 @@ class ApiClient {
     return res.data;
   }
 
+  async deleteTravel(id: string | number) {
+    const res = await this.client.delete(`/api/travel/${id}`);
+    return res.data;
+  }
+
   // Matches
   async getRecommendations(ticketId: string | number) {
     const res = await this.client.get(`/api/travel/${ticketId}/recommendations`);

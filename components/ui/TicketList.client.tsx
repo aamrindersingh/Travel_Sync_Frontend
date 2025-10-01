@@ -60,7 +60,17 @@ export default function TicketListClient() {
     time_diff_mins: 15,
     empty_seats: 1,
     phone_number: '',
+    status: '' as 'open' | 'closed' | ''
   });
+
+  const sortTicketsForDisplay = (arr: TravelTicket[]) => {
+    return [...arr].sort((a, b) => {
+      const aClosed = (a.status || '').toLowerCase() === 'closed';
+      const bClosed = (b.status || '').toLowerCase() === 'closed';
+      if (aClosed !== bClosed) return aClosed ? 1 : -1; // closed go to bottom
+      return 0;
+    });
+  };
 
   // Compact copies of location options (match create form)
   const HOSTELS = useMemo(() => [
@@ -107,7 +117,7 @@ export default function TicketListClient() {
         if (!mounted) return;
         const data = (res?.data ?? res) as { success?: boolean; data?: TravelTicket[] } | TravelTicket[];
         const list = Array.isArray(data) ? data : data?.data || [];
-        setTickets(list);
+        setTickets(sortTicketsForDisplay(list));
       })
       .catch((err) => {
         if (!mounted) return;
@@ -174,6 +184,7 @@ export default function TicketListClient() {
       time_diff_mins: t.time_diff_mins,
       empty_seats: t.empty_seats,
       phone_number: t.phone_number,
+      status: (t.status as any) === 'closed' ? 'closed' : 'open',
     });
     setEditingId(t.id);
   };
@@ -210,9 +221,10 @@ export default function TicketListClient() {
         time_diff_mins: form.time_diff_mins,
         empty_seats: form.empty_seats,
         phone_number: form.phone_number,
+        status: form.status || undefined,
       });
       const updated = res?.data ?? res;
-      setTickets((prev) => prev.map((t) => (t.id === id ? { ...t, ...updated } : t)));
+      setTickets((prev) => sortTicketsForDisplay(prev.map((t) => (t.id === id ? { ...t, ...updated } : t))));
       setEditingId(null);
     } catch (err) {
       setError((err as any)?.response?.data?.error || 'Failed to update ticket');
@@ -234,9 +246,9 @@ export default function TicketListClient() {
         return (
           <div
             key={ticket.id}
-            className="group ticket-modern p-6 cursor-pointer"
+            className={`group ticket-modern p-6 ${ticket.status === 'closed' ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'}`}
             onClick={() => {
-              if (!isEditing) router.push(`/tickets/${ticket.id}`);
+              if (!isEditing && ticket.status !== 'closed') router.push(`/tickets/${ticket.id}`);
             }}
           >
             <div className="flex justify-between items-start mb-4">
@@ -245,10 +257,28 @@ export default function TicketListClient() {
                   {ticket.source} → {ticket.destination}
                 </h3>
               </div>
-              {ticket.status && (
+              {!isEditing && ticket.status && (
                 <span className={`px-3 py-1.5 rounded-full text-xs font-semibold border tracking-wide uppercase ${getStatusColor(ticket.status)}`}>
                   {ticket.status}
                 </span>
+              )}
+              {isEditing && (
+                <div className="inline-flex items-center rounded-xl border border-white/10 bg-white/[0.04] p-1">
+                  <button
+                    type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, status: 'open' }))}
+                    className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${form.status !== 'closed' ? 'text-emerald-300 bg-emerald-500/10 border border-emerald-500/30' : 'text-white/70 hover:text-white border border-transparent'}`}
+                  >
+                    Open
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForm((prev) => ({ ...prev, status: 'closed' }))}
+                    className={`ml-1 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors ${form.status === 'closed' ? 'text-rose-300 bg-rose-500/10 border border-rose-500/30' : 'text-white/70 hover:text-white border border-transparent'}`}
+                  >
+                    Closed
+                  </button>
+                </div>
               )}
             </div>
 
@@ -268,6 +298,7 @@ export default function TicketListClient() {
                 className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm relative z-10"
                 onClick={(e) => e.stopPropagation()}
               >
+                
                 {/* Source */}
                 <div className="group">
                   <label className="block text-xs font-semibold text-white mb-1 flex items-center">
@@ -379,8 +410,9 @@ export default function TicketListClient() {
                   <label className="block text-xs font-semibold text-white mb-1 flex items-center">
                     <span className="w-1.5 h-1.5 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2"></span>
                     Acceptable Time Difference <span className="ml-2 text-[var(--neon-accent)] font-bold">{form.time_diff_mins} mins</span>
+                    <span className="ml-2 text-white/70 text-[10px]">(~{(form.time_diff_mins/60).toFixed(1)} hr)</span>
                   </label>
-                  <input type="range" min={0} max={120} step={5} name="time_diff_mins" value={form.time_diff_mins} onChange={onFormChange} className="w-full h-2 bg-white/10 rounded-lg appearance-none accent-[var(--neon-accent)]" />
+                  <input type="range" min={0} max={300} step={5} name="time_diff_mins" value={form.time_diff_mins} onChange={onFormChange} className="w-full h-2 bg-white/10 rounded-lg appearance-none accent-[var(--neon-accent)]" />
                 </div>
                 <div className="group">
                   <label className="block text-xs font-semibold text-white mb-1 flex items-center">
@@ -425,16 +457,29 @@ export default function TicketListClient() {
               <span>Empty seats: {ticket.empty_seats}</span>
               <div className="flex items-center gap-3">
                 {!isEditing ? (
-                  <button onClick={(e) => { e.stopPropagation(); beginEdit(ticket); }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white/90 border border-white/10 bg-white/[0.03] hover:text-white hover:border-[var(--neon-accent)]/40 hover:shadow-[0_0_18px_rgba(0,228,255,0.25)] transition-all">Edit</button>
+                  <button
+                    disabled={ticket.status === 'closed'}
+                    onClick={(e) => { e.stopPropagation(); beginEdit(ticket); }}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${ticket.status === 'closed' ? 'text-white/40 border border-white/10 bg-white/[0.02] cursor-not-allowed' : 'text-white/90 border border-white/10 bg-white/[0.03] hover:text-white hover:border-[var(--neon-accent)]/40 hover:shadow-[0_0_18px_rgba(0,228,255,0.25)]'}`}
+                  >
+                    Edit
+                  </button>
                 ) : (
                   <>
                     <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white/80 border border-white/10 bg-white/[0.02] hover:text-white hover:bg-white/[0.06] transition-all">Cancel</button>
                     <button disabled={saving} onClick={(e) => { e.stopPropagation(); saveEdit(ticket.id); }} className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[var(--neon-accent)]/90 hover:bg-[var(--neon-accent)] shadow-[0_8px_24px_rgba(0,228,255,0.35)] hover:shadow-[0_10px_28px_rgba(0,228,255,0.45)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all">{saving ? 'Saving…' : 'Save'}</button>
+                    <button onClick={async (e) => { e.stopPropagation(); if (!confirm('Delete this ticket?')) return; try { await api.deleteTravel(ticket.id); setTickets((prev)=>prev.filter(t=>t.id!==ticket.id)); } catch (err) { setError((err as any)?.response?.data?.error || 'Failed to delete ticket'); } }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-300 border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 transition-all">Delete</button>
                   </>
                 )}
-                <Link href={`/tickets/${ticket.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-white/10 text-white/60 hover:text-[var(--neon-accent)] hover:border-[var(--neon-accent)]/40 transition-colors">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
-                </Link>
+                {ticket.status !== 'closed' ? (
+                  <Link href={`/tickets/${ticket.id}`} className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-white/10 text-white/60 hover:text-[var(--neon-accent)] hover:border-[var(--neon-accent)]/40 transition-colors">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+                  </Link>
+                ) : (
+                  <span className="inline-flex items-center justify-center w-8 h-8 rounded-md border border-white/10 text-white/40">
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"/></svg>
+                  </span>
+                )}
               </div>
             </div>
           </div>

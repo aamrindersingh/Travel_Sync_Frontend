@@ -34,6 +34,9 @@ export default async function TicketPage({ params }: TicketPageProps) {
           <ClientTicketCard ticketId={ticketId} />
         </div>
 
+        {/* Recommendations */}
+        {/* Note: Recommendation component will read ticket status via its own fetch; it should hide content if closed.
+            As a quick guard, keep as-is; status check is inside client component when needed. */}
         <Recommendations ticketId={ticketId} />
       </div>
     </div>
