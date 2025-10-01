@@ -24,66 +24,43 @@ export default function UserCard({
   className = '',
 }: UserCardProps) {
   return (
-    <div className={`neon-card text-white p-4 sm:p-5 ${className}`}>
+    <div className={`neon-card text-white p-4 sm:p-5 w-full max-w-md mx-auto flex flex-col items-center justify-center ${className}`} style={{ aspectRatio: '1 / 1' }}>
       {/* Header */}
-      <div className="flex items-start gap-3">
-        <div className="w-12 h-12 rounded-2xl bg-[#2563EB] text-white flex items-center justify-center font-semibold shadow-[0_0_18px_rgba(37,99,235,0.35)]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-14 h-14 bg-[#2563EB] text-white flex items-center justify-center font-semibold shadow-[0_0_18px_rgba(37,99,235,0.35)]">
           {initials}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 flex-wrap">
-            <div className="font-semibold text-white text-base sm:text-lg truncate">{name}</div>
+        <div className="min-w-0">
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            <div className="font-semibold text-white text-base sm:text-lg truncate max-w-[16rem]">{name}</div>
             {batch ? (
               <span className="px-2 py-0.5 rounded-md neon-pill text-[11px] text-white/90">{batch}</span>
             ) : null}
             {typeof score === 'number' ? (
-              <span className="px-2.5 py-0.5 rounded-md neon-score text-[11px] text-[#F59E0B] inline-flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                {score.toFixed(2)}
+              <span className="px-2.5 py-0.5 rounded-full border border-white/10 bg-white/5 text-[11px] text-white/90 inline-flex items-center gap-1">
+                <svg className="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span className="tabular-nums">{score.toFixed(2)}</span>
               </span>
             ) : null}
-          </div>
-          <div className="mt-2 inline-flex items-center gap-1 text-white/80 text-[13px]">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span className="text-[var(--neon-accent)] font-semibold">{time}</span>
           </div>
         </div>
       </div>
 
       {/* Travel */}
-      <div className="mt-4">
-        {/* Structured From/To with vertical rail */}
-        <div className="grid grid-cols-[1rem_auto_auto] gap-x-3 items-start">
-          {/* From */}
-          <div className="flex items-center justify-center">
-            <div className="w-2.5 h-2.5 rounded-md bg-[var(--neon-accent)] shadow-[0_0_12px_rgba(255,107,53,0.45)]" />
-          </div>
-          <div className="min-w-0">
+      <div className="mt-6 w-full flex justify-center">
+        {/* Minimal horizontal route with From — line — To */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="min-w-0 text-right">
             <div className="text-[12px] text-white/60">From</div>
-            <div className="font-semibold text-white leading-snug break-words">{from}</div>
+            <div className="font-semibold text-white truncate max-w-[12rem] sm:max-w-[14rem]">{from}</div>
           </div>
-          <div className="text-right">
-            <div className="text-[12px] text-white/60">Time</div>
-            <div className="text-[var(--neon-accent)] font-semibold">{time}</div>
-          </div>
-
-          {/* Rail */}
-          <div className="flex items-stretch justify-center">
-            <div className="route-rail" style={{ height: 26 }} />
-          </div>
-          <div />
-          <div />
-
-          {/* To */}
-          <div className="flex items-center justify-center">
-            <svg className="w-4 h-4 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3zm0 0c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z"/></svg>
+          <div className="w-28 sm:w-40 h-px bg-white/10 relative">
+            <div className="absolute -top-1 left-0 w-2 h-2 rounded-full bg-white/30" />
+            <div className="absolute -top-1 right-0 w-2 h-2 rounded-full bg-white/30" />
           </div>
           <div className="min-w-0">
             <div className="text-[12px] text-white/60">To</div>
-            <div className="font-semibold text-white leading-snug break-words">{to}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-[12px] text-white/60">Arrival</div>
+            <div className="font-semibold text-white truncate max-w-[12rem] sm:max-w-[14rem]">{to}</div>
           </div>
         </div>
       </div>

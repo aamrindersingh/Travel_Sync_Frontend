@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
-import UserCard from '@/components/ui/UserCard.client';
+import TravelCard from '@/components/ui/TravelCard.client';
 
 function bName(t: any): string {
   return t?.student_name || t?.user_name || t?.name || 'Traveler';
@@ -73,14 +73,24 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     const name = user?.name || t?.student_name || t?.user_name || t?.name || '';
     const batchRaw = user?.batch || t?.student_batch || t?.user_batch || t?.batch;
     const batch = batchRaw ? String(batchRaw) : '';
-    let displayTime = time || '—';
+    const to12h = (input?: string) => {
+      if (!input) return '';
+      // If already includes AM/PM, return as is
+      if (/am|pm/i.test(input)) return input;
+      const [hStr, mStr] = String(input).split(':');
+      const hNum = parseInt(hStr || '0', 10);
+      const mm = (mStr || '00').slice(0, 2);
+      const ampm = hNum >= 12 ? 'PM' : 'AM';
+      const h12 = (hNum % 12) || 12;
+      return `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
+    };
+    let displayTime = to12h(time) || '—';
     if (!time && date && t?.departure_at) {
       const d = new Date(t.departure_at);
-      const hh = String(d.getHours()).padStart(2, '0');
+      const hh = d.getHours();
       const mm = String(d.getMinutes()).padStart(2, '0');
-      const hNum = parseInt(hh, 10);
-      const ampm = hNum >= 12 ? 'PM' : 'AM';
-      const h12 = hNum % 12 || 12;
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      const h12 = (hh % 12) || 12;
       displayTime = `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
     }
     return {
@@ -93,6 +103,31 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
       score,
     };
   };
+
+  function splitAndFormat(apiString?: string) {
+    if (!apiString) return { dateText: '', timeText: '' };
+    const [dateRaw, timeRaw] = String(apiString).split('·').map((s) => s.trim());
+    // Date
+    let dateText = '';
+    try {
+      const d = new Date(dateRaw);
+      const fmt = new Intl.DateTimeFormat(undefined, { month: 'short', day: '2-digit', year: 'numeric' });
+      dateText = fmt.format(d);
+    } catch {}
+    // Time -> 12h
+    const to12 = (t?: string) => {
+      if (!t) return '';
+      if (/am|pm/i.test(t)) return t;
+      const [h, m] = t.split(':');
+      const hh = parseInt(h || '0', 10);
+      const mm = (m || '00').slice(0, 2);
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      const h12 = (hh % 12) || 12;
+      return `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
+    };
+    const timeText = to12(timeRaw);
+    return { dateText, timeText };
+  }
 
   if (loading || phase !== 'done') {
     return (
@@ -128,14 +163,16 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
           </div>
         </div>
         {bestMatch ? (
-          <UserCard
+          <TravelCard
             initials={getInitials(bestMatch.user?.name || bName(bestMatch.ticket))}
             name={bestMatch.user?.name || bName(bestMatch.ticket)}
-            batch={bestMatch.user?.batch || 'Student'}
-            score={bestMatch.score}
-            time={bestMatch.time}
+            subtitle={(bestMatch.user?.batch || 'Student')}
             from={bestMatch.ticket?.source}
             to={bestMatch.ticket?.destination}
+            dateText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
+            timeText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
+            score={bestMatch.score}
+            whatsappLink={bestMatch?.user?.whatsappLink || bestMatch?.ticket?.whatsappLink || bestMatch?.whatsappLink}
           />
         ) : (
           <div className="text-white/60">No best match yet</div>
@@ -156,15 +193,17 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
         {bestGroup && bestGroup.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2">
             {bestGroup.map((m, idx) => (
-              <UserCard
+              <TravelCard
                 key={idx}
                 initials={getInitials(m.user?.name || bName(m.ticket))}
                 name={m.user?.name || bName(m.ticket)}
-                batch={m.user?.batch || 'Student'}
-                score={m.score}
-                time={m.time}
+                subtitle={(m.user?.batch || 'Student')}
                 from={m.ticket?.source}
                 to={m.ticket?.destination}
+                dateText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
+                timeText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
+                score={m.score}
+                whatsappLink={m?.user?.whatsappLink || m?.ticket?.whatsappLink || m?.whatsappLink}
               />
             ))}
           </div>
@@ -184,17 +223,20 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             <p className="text-white/70 text-sm">Other potential matches and opportunities</p>
           </div>
         </div>
-        {alternatives && alternatives.length > 0 ? (
+            {alternatives && alternatives.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2">
             {alternatives.map((alt: any, idx: number) => (
-              <UserCard
+              <TravelCard
                 key={idx}
                 initials={getInitials(alt.user?.name || bName(alt.ticket || alt))}
                 name={alt.user?.name || bName(alt.ticket || alt)}
-                batch={alt.user?.batch || 'Student'}
-                time={alt.time}
+                subtitle={(alt.user?.batch || 'Student')}
                 from={(alt.ticket || alt)?.source}
                 to={(alt.ticket || alt)?.destination}
+                dateText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
+                timeText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
+                score={alt?.score}
+                whatsappLink={alt?.user?.whatsappLink || alt?.ticket?.whatsappLink || alt?.whatsappLink}
               />
             ))}
           </div>
