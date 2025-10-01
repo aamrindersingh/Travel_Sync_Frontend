@@ -61,7 +61,7 @@ export default function HomePage() {
             </Link>
 
             <Link
-              href="/find"
+              href="/tickets"
               className="group relative px-6 sm:px-7 lg:px-8 py-3 sm:py-3.5 lg:py-4 rounded-xl font-semibold text-base sm:text-lg text-white transition-all duration-300 flex items-center justify-center space-x-3 bg-gradient-to-r from-[#45B7D1]/25 to-[#96CEB4]/25 backdrop-blur-sm border-2 border-[#45B7D1]/40 hover:from-[#45B7D1]/35 hover:to-[#96CEB4]/35 hover:border-[#45B7D1]/60 shadow-lg hover:shadow-[0_0_20px_rgba(69,183,209,0.3)] hover:scale-105"
             >
               <svg
@@ -77,7 +77,7 @@ export default function HomePage() {
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
-              <span className="whitespace-nowrap">Search Buddy</span>
+              <span className="whitespace-nowrap">View Tickets</span>
             </Link>
           </div>
         </div>

@@ -4,33 +4,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import useAuth from '@/hooks/useAuth.client';
 import { useRef } from 'react';
 
 
 // Location constants aligned with backend `constants.go`
-const HOSTELS = [
+const HOSTELS: string[] = [
   'Uniworld-1',
   'Uniworld-2',
-] as const;
+];
 
-const AIRPORT_TERMINALS = [
+const AIRPORT_TERMINALS: string[] = [
   'Kempegowda International Airport Terminal-1',
   'Kempegowda International Airport Terminal-2',
-] as const;
+];
 
-const RAILWAY_STATIONS = [
-  'KSR SBC Bengaluru Junction',
-  'SMVT Bengaluru railway station',
+const RAILWAY_STATIONS: string[] = [
+  'KSR SBC Bengaluru Junction Railway Station',
+  'SMVT Bengaluru Railway station',
   'Krishnarajapuram Railway Station',
   'Yesvantpur Junction Railway station',
   'Banglore Cantonment Railway Station',
   'Bengaluru East Railway Station',
-] as const;
+];
 
 export default function ClientCreateForm() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
   const prefilledOnce = useRef(false);
   const [formData, setFormData] = useState({
     source: '',
@@ -62,11 +60,12 @@ export default function ClientCreateForm() {
     const src = formData.source;
     if (!src) return allLocations;
 
-    const isAirport = AIRPORT_TERMINALS.includes(src as typeof AIRPORT_TERMINALS[number]);
-    const isHostel = HOSTELS.includes(src as typeof HOSTELS[number]);
+    const isAirport = AIRPORT_TERMINALS.includes(src);
+    const isHostel = HOSTELS.includes(src);
+    const isRailway = RAILWAY_STATIONS.includes(src);
 
-    // Rule 1: If source is an airport terminal, destination should only show hostels
-    if (isAirport) {
+    // Rule 1: If source is an airport terminal or a railway station, destination should only show hostels
+    if (isAirport || isRailway) {
       return [...HOSTELS];
     }
 
@@ -357,12 +356,13 @@ export default function ClientCreateForm() {
           <span className="w-2 h-2 bg-gradient-to-r from-[var(--neon-accent)] to-[var(--neon-accent-2)] rounded-full mr-2 animate-pulse"></span>
           Acceptable Time Difference
           <span className="ml-2 text-[var(--neon-accent)] font-bold">{timeDiffMins} mins</span>
+          <span className="ml-2 text-white/70 text-xs">(~{(timeDiffMins / 60).toFixed(1)} hr)</span>
         </label>
         <div className="relative px-2 py-4 rounded-xl bg-white/5 border border-white/10">
           <input
             type="range"
             min={0}
-            max={120}
+            max={300}
             step={5}
             value={timeDiffMins}
             onChange={(e) => setTimeDiffMins(parseInt(e.target.value, 10))}
@@ -370,10 +370,11 @@ export default function ClientCreateForm() {
           />
           <div className="flex justify-between text-xs text-white/60 mt-2">
             <span>0</span>
-            <span>30</span>
             <span>60</span>
-            <span>90</span>
             <span>120</span>
+            <span>180</span>
+            <span>240</span>
+            <span>300</span>
           </div>
         </div>
       </div>
