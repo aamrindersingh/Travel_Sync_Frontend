@@ -26,10 +26,11 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const [loading, setLoading] = useState(true);
   const [phase, setPhase] = useState<'pre' | 'fetching' | 'done'>('pre');
   const [error, setError] = useState<string | null>(null);
+  type RecUser = { name?: string; batch?: string; email?: string; whatsappLink?: string };
   const [data, setData] = useState<{
-    best_match?: { ticket: any; user?: { name?: string; batch?: string }; score: number; date: string; time: string } | null;
-    best_group?: Array<{ ticket: any; user?: { name?: string; batch?: string }; score: number; date: string; time: string }> | null;
-    other_alternatives?: Array<{ ticket?: any; user?: { name?: string; batch?: string } }> | null;
+    best_match?: { ticket: any; user?: RecUser; score: number; date: string; time: string } | null;
+    best_group?: Array<{ ticket: any; user?: RecUser; score: number; date: string; time: string }> | null;
+    other_alternatives?: Array<{ ticket?: any; user?: RecUser }> | null;
   } | null>(null);
 
   useEffect(() => {
@@ -173,7 +174,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             dateText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
             timeText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
             score={bestMatch.score}
-            whatsappLink={bestMatch?.user?.whatsappLink || bestMatch?.ticket?.whatsappLink || bestMatch?.whatsappLink}
+            whatsappLink={bestMatch?.user?.whatsappLink || bestMatch?.ticket?.whatsappLink}
           />
         ) : (
           <div className="flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10">
@@ -213,7 +214,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
                 score={m.score}
-                whatsappLink={m?.user?.whatsappLink || m?.ticket?.whatsappLink || m?.whatsappLink}
+                whatsappLink={m?.user?.whatsappLink || m?.ticket?.whatsappLink}
               />
             ))}
           </div>
@@ -255,7 +256,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
                 score={alt?.score}
-                whatsappLink={alt?.user?.whatsappLink || alt?.ticket?.whatsappLink || alt?.whatsappLink}
+                whatsappLink={alt?.user?.whatsappLink || alt?.ticket?.whatsappLink}
               />
             ))}
           </div>
