@@ -184,7 +184,7 @@ export default function TicketListClient() {
       time_diff_mins: t.time_diff_mins,
       empty_seats: t.empty_seats,
       phone_number: t.phone_number,
-      status: (t.status as any) === 'closed' ? 'closed' : 'open',
+      status: (t.status as unknown as string) === 'closed' ? 'closed' : 'open',
     });
     setEditingId(t.id);
   };
@@ -214,20 +214,22 @@ export default function TicketListClient() {
       }
       const [Y, M, D] = form.date.split('-').map((n) => parseInt(n, 10));
       const iso = new Date(Y, M - 1, D, h, m, 0, 0).toISOString();
-      const res = await api.updateTravel(id, {
+      const payload = {
         source: form.source,
         destination: form.destination,
         departure_at: iso,
         time_diff_mins: form.time_diff_mins,
         empty_seats: form.empty_seats,
         phone_number: form.phone_number,
-        status: form.status || undefined,
-      });
+        ...(form.status ? { status: form.status as 'open' | 'closed' } : {}),
+      };
+      const res = await api.updateTravel(id, payload);
       const updated = res?.data ?? res;
       setTickets((prev) => sortTicketsForDisplay(prev.map((t) => (t.id === id ? { ...t, ...updated } : t))));
       setEditingId(null);
     } catch (err) {
-      setError((err as any)?.response?.data?.error || 'Failed to update ticket');
+      const maybeAxios = err as { response?: { data?: { error?: string } } } | undefined;
+      setError(maybeAxios?.response?.data?.error || 'Failed to update ticket');
     } finally {
       setSaving(false);
     }
@@ -468,7 +470,7 @@ export default function TicketListClient() {
                   <>
                     <button onClick={(e) => { e.stopPropagation(); cancelEdit(); }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white/80 border border-white/10 bg-white/[0.02] hover:text-white hover:bg-white/[0.06] transition-all">Cancel</button>
                     <button disabled={saving} onClick={(e) => { e.stopPropagation(); saveEdit(ticket.id); }} className="px-4 py-1.5 rounded-xl text-xs font-bold text-white bg-[var(--neon-accent)]/90 hover:bg-[var(--neon-accent)] shadow-[0_8px_24px_rgba(0,228,255,0.35)] hover:shadow-[0_10px_28px_rgba(0,228,255,0.45)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all">{saving ? 'Saving…' : 'Save'}</button>
-                    <button onClick={async (e) => { e.stopPropagation(); if (!confirm('Delete this ticket?')) return; try { await api.deleteTravel(ticket.id); setTickets((prev)=>prev.filter(t=>t.id!==ticket.id)); } catch (err) { setError((err as any)?.response?.data?.error || 'Failed to delete ticket'); } }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-300 border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 transition-all">Delete</button>
+                    <button onClick={async (e) => { e.stopPropagation(); if (!confirm('Delete this ticket?')) return; try { await api.deleteTravel(ticket.id); setTickets((prev)=>prev.filter(t=>t.id!==ticket.id)); } catch (err) { const maybeAxios = err as { response?: { data?: { error?: string } } } | undefined; setError(maybeAxios?.response?.data?.error || 'Failed to delete ticket'); } }} className="px-3 py-1.5 rounded-xl text-xs font-semibold text-rose-300 border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 transition-all">Delete</button>
                   </>
                 )}
                 {ticket.status !== 'closed' ? (

@@ -1,10 +1,25 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import TravelCard from '@/components/ui/TravelCard.client';
 
-function bName(t: any): string {
+type TicketLike = {
+  id?: number | string;
+  student_name?: string;
+  user_name?: string;
+  name?: string;
+  student_batch?: string;
+  user_batch?: string;
+  batch?: string;
+  email?: string;
+  source?: string;
+  destination?: string;
+  whatsappLink?: string;
+  departure_at?: string;
+};
+
+function bName(t: TicketLike | undefined | null): string {
   return t?.student_name || t?.user_name || t?.name || 'Traveler';
 }
 
@@ -28,9 +43,9 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const [error, setError] = useState<string | null>(null);
   type RecUser = { name?: string; batch?: string; email?: string; whatsappLink?: string };
   const [data, setData] = useState<{
-    best_match?: { ticket: any; user?: RecUser; score: number; date: string; time: string } | null;
-    best_group?: Array<{ ticket: any; user?: RecUser; score: number; date: string; time: string }> | null;
-    other_alternatives?: Array<{ ticket?: any; user?: RecUser }> | null;
+    best_match?: { ticket: TicketLike; user?: RecUser; score: number; date: string; time: string } | null;
+    best_group?: Array<{ ticket: TicketLike; user?: RecUser; score: number; date: string; time: string }> | null;
+    other_alternatives?: Array<{ ticket?: TicketLike; user?: RecUser; score?: number; date?: string; time?: string }> | null;
   } | null>(null);
 
   useEffect(() => {
@@ -69,41 +84,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
   const bestGroup = data?.best_group || [];
   const alternatives = data?.other_alternatives || [];
 
-  const toBuddy = (t: any, score?: number, date?: string, time?: string, user?: { name?: string; batch?: string }) => {
-    // Prefer explicit user payload from API, fallback to any ticket-attached fields
-    const name = user?.name || t?.student_name || t?.user_name || t?.name || '';
-    const batchRaw = user?.batch || t?.student_batch || t?.user_batch || t?.batch;
-    const batch = batchRaw ? String(batchRaw) : '';
-    const to12h = (input?: string) => {
-      if (!input) return '';
-      // If already includes AM/PM, return as is
-      if (/am|pm/i.test(input)) return input;
-      const [hStr, mStr] = String(input).split(':');
-      const hNum = parseInt(hStr || '0', 10);
-      const mm = (mStr || '00').slice(0, 2);
-      const ampm = hNum >= 12 ? 'PM' : 'AM';
-      const h12 = (hNum % 12) || 12;
-      return `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
-    };
-    let displayTime = to12h(time) || '—';
-    if (!time && date && t?.departure_at) {
-      const d = new Date(t.departure_at);
-      const hh = d.getHours();
-      const mm = String(d.getMinutes()).padStart(2, '0');
-      const ampm = hh >= 12 ? 'PM' : 'AM';
-      const h12 = (hh % 12) || 12;
-      displayTime = `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
-    }
-    return {
-      id: String(t?.id || t?.ticket?.id || Math.random()),
-      name: name || 'Traveler',
-      batch: batch || 'Student',
-      time: displayTime,
-      source: t?.source || t?.ticket?.source || '—',
-      destination: t?.destination || t?.ticket?.destination || '—',
-      score,
-    };
-  };
+  //
 
   function splitAndFormat(apiString?: string) {
     if (!apiString) return { dateText: '', timeText: '' };
@@ -168,9 +149,9 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             initials={getInitials(bestMatch.user?.name || bName(bestMatch.ticket))}
             name={bestMatch.user?.name || bName(bestMatch.ticket)}
             subtitle={(bestMatch.user?.batch || 'Student')}
-            email={bestMatch.user?.email || bestMatch.ticket?.email}
-            from={bestMatch.ticket?.source}
-            to={bestMatch.ticket?.destination}
+            email={bestMatch.user?.email || bestMatch.ticket?.email || ''}
+            from={bestMatch.ticket?.source || '—'}
+            to={bestMatch.ticket?.destination || '—'}
             dateText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
             timeText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
             score={bestMatch.score}
@@ -208,9 +189,9 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 initials={getInitials(m.user?.name || bName(m.ticket))}
                 name={m.user?.name || bName(m.ticket)}
                 subtitle={(m.user?.batch || 'Student')}
-                email={m.user?.email || m.ticket?.email}
-                from={m.ticket?.source}
-                to={m.ticket?.destination}
+                email={m.user?.email || m.ticket?.email || ''}
+                from={m.ticket?.source || '—'}
+                to={m.ticket?.destination || '—'}
                 dateText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
                 score={m.score}
@@ -244,15 +225,15 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
         </div>
             {alternatives && alternatives.length > 0 ? (
           <div className="grid gap-4 sm:grid-cols-2">
-            {alternatives.map((alt: any, idx: number) => (
+            {alternatives.map((alt, idx: number) => (
               <TravelCard
                 key={idx}
-                initials={getInitials(alt.user?.name || bName(alt.ticket || alt))}
-                name={alt.user?.name || bName(alt.ticket || alt)}
+                initials={getInitials(alt.user?.name || bName(alt.ticket))}
+                name={alt.user?.name || bName(alt.ticket)}
                 subtitle={(alt.user?.batch || 'Student')}
-                email={alt.user?.email || (alt.ticket || alt)?.email}
-                from={(alt.ticket || alt)?.source}
-                to={(alt.ticket || alt)?.destination}
+                email={alt.user?.email || alt.ticket?.email || ''}
+                from={alt.ticket?.source || '—'}
+                to={alt.ticket?.destination || '—'}
                 dateText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
                 score={alt?.score}

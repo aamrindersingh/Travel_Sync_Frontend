@@ -2,6 +2,7 @@
 'use client';
 
 import ClientLogin from './client-login';
+import { Suspense } from 'react';
 
 export default function LoginPage() {
   // TODO: Check auth cookie and redirect if already authenticated
@@ -15,7 +16,9 @@ export default function LoginPage() {
             Sign in to TravelSync
           </h2>
         </div>
-        <ClientLogin />
+        <Suspense fallback={<div className="text-gray-600">Loading…</div>}> 
+          <ClientLogin />
+        </Suspense>
       </div>
     </div>
   );

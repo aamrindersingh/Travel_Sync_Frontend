@@ -1,7 +1,5 @@
 // server
-import MatchGroup from '@/components/ui/MatchGroup.server';
 import ClientTicketCard from './client-ticket-card';
-import UserBuddies from '@/components/ui/UserBuddies.client';
 import Recommendations from './recommendations.client';
 
 interface TicketPageProps {

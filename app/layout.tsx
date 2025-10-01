@@ -1,12 +1,10 @@
 // server
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Header from "@/components/ui/Header.server";
 import "./globals.css";
 import AuthGuard from "@/components/ui/AuthGuard.client";
 import AmbientBackground from "@/components/ui/AmbientBackground.client";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "TravelSync - Find Your Perfect Travel Companions",

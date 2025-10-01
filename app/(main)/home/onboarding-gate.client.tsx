@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import useAuth from '@/hooks/useAuth.client';
 import api from '@/lib/api';
 
 export default function OnboardingGate() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated, isLoading, user } = useAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -104,8 +103,8 @@ export default function OnboardingGate() {
               <button
                 disabled={saving || !isFormValid}
                 onClick={async () => {
-                  const anyUser = user as any;
-                  const userId = anyUser?.user_id ?? anyUser?.id;
+                  const userRecord = user as unknown as Record<string, unknown> | null;
+                  const userId = (userRecord?.['user_id'] as string | undefined) ?? (userRecord?.['id'] as string | undefined);
                   if (!userId) return;
                   setSaving(true);
                   try {

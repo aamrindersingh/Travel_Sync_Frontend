@@ -7,7 +7,6 @@ type UserCardProps = {
   name: string;
   batch?: string;
   score?: number;
-  time?: string; // 12h
   from?: string;
   to?: string;
   className?: string;
@@ -18,7 +17,6 @@ export default function UserCard({
   name,
   batch = 'Batch2024',
   score = 100,
-  time = '03:10 PM',
   from = 'Bangalore Cantonment Railway Station',
   to = 'Krishnarajapuram Railway Station',
   className = '',

@@ -102,8 +102,8 @@ export default function ClientCreateForm() {
           details?.data?.phone_number ||
           details?.phone_number ||
           details?.data?.PhoneNumber ||
-          (details?.data && (details.data as any).PhoneNumber) ||
-          (details as any)?.PhoneNumber ||
+          (details?.data && (details.data as Record<string, unknown>)['PhoneNumber']) ||
+          ((details as unknown as Record<string, unknown>)['PhoneNumber'] as string | undefined) ||
           me?.phone_number;
         console.log('[create] extracted phone before parse:', phone);
         if (phone) {

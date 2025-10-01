@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useAuth from '@/hooks/useAuth.client';
 
-export default function AuthSuccessPage() {
+function Content() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [name, setName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -33,7 +33,7 @@ export default function AuthSuccessPage() {
   }, [isLoading, isAuthenticated, isFirstLogin, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
       <div className="relative w-full max-w-lg p-8 text-center">
         <div className="absolute -inset-10 bg-gradient-to-r from-[var(--neon-accent)]/10 via-transparent to-[var(--neon-accent-2)]/10 rounded-3xl blur-2xl opacity-50"></div>
         <div className="relative">
@@ -133,6 +133,14 @@ export default function AuthSuccessPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function AuthSuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]"><div className="text-white/70">Loading…</div></div>}>
+      <Content />
+    </Suspense>
   );
 }
 

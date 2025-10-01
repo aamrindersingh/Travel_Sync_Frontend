@@ -13,12 +13,12 @@ type TravelCardProps = {
   to: string;
   dateText?: string;
   timeText?: string;
-  score?: number;
-  whatsappLink?: string; // e.g. https://wa.me/xxxxxxxxxx?text=Hello
+  score?: number | undefined;
+  whatsappLink?: string | undefined; // e.g. https://wa.me/xxxxxxxxxx?text=Hello
   className?: string;
 };
 
-function FallbackInitials({ name, initials }: { name?: string; initials?: string }) {
+function FallbackInitials({ name, initials }: { name?: string | undefined; initials?: string | undefined }) {
   const text = React.useMemo(() => {
     if (initials && initials.trim().length > 0) return initials.trim().slice(0, 2).toUpperCase();
     const parts = String(name || '')
