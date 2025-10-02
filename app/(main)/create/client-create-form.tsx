@@ -152,11 +152,19 @@ export default function ClientCreateForm() {
     } catch (err) {
       const maybeAxios = err as { response?: { status?: number; data?: { error?: string } } } | undefined;
       const status = maybeAxios?.response?.status;
-      const backendMsg = maybeAxios?.response?.data?.error;
+      const backendMsg = (maybeAxios?.response?.data?.error || '').trim();
       if (status === 400) {
-        // Standardize professional message for duplicate date constraint
-        setModalMessage('You cannot create multiple tickets for the same date.');
-        setShowErrorModal(true);
+        // Handle specific backend validation cases with a consistent modal UX
+        if (backendMsg.toLowerCase().includes('ticket already exists for this date')) {
+          setModalMessage('You cannot create multiple tickets for the same date.');
+          setShowErrorModal(true);
+        } else if (backendMsg.toLowerCase().includes('please delete your non-relevant/closed tickets')) {
+          // 21st ticket limit exceeded (max 20 per user)
+          setModalMessage('You have reached the limit of 20 tickets. Please delete non-relevant or closed tickets to create a new one.');
+          setShowErrorModal(true);
+        } else {
+          setFormError(backendMsg || 'Please check your input and try again.');
+        }
       } else {
         setFormError(backendMsg || 'Failed to create ticket. Please try again.');
       }
