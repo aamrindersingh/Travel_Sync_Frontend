@@ -145,13 +145,12 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     const when = formatIstFromIso(ticket?.departure_at || '')?.timeText || '';
     const dateText = formatIstFromIso(ticket?.departure_at || '')?.dateText || '';
     const traveler = user?.name || bName(ticket);
-    const email = user?.email ? ` (${user.email})` : '';
-    const intro = `Hello ${traveler}${email},`;
+    const intro = `Hello ${traveler},`;
     const line1 = `I'm interested in sharing a cab for your trip ${ticket?.source || ''} → ${ticket?.destination || ''}.`;
     const line2 = (dateText || when) ? `Planned departure: ${dateText}${dateText && when ? ' · ' : ''}${when}.` : '';
     const line3 = `If you're open to coordinating, please let me know.`;
     const footer = `Thanks!`;
-    const message = [intro, line1, line2, line3, footer].filter(Boolean).join('\n');
+    const message = [intro, '', line1, line2, line3, '', footer].filter(Boolean).join('\n');
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   }
 

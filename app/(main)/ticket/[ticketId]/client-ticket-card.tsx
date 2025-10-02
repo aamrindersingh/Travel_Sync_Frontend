@@ -21,12 +21,12 @@ export default function ClientTicketCard({ ticketId }: ClientTicketCardProps) {
     })();
     const phone = profilePhone ? `+91-${profilePhone}` : undefined;
     const intro = `Hello!`;
-    const line1 = `I am ${displayName}${user?.email ? ` (${user.email})` : ''}.`;
+    const line1 = `I am ${displayName}.`;
     const line2 = `I'm interested in sharing a cab for ticket #${ticketId}.`;
     const line3 = `If you're open to coordinating, please let me know.`;
     const line4 = phone ? `You can reach me on WhatsApp at ${phone}.` : '';
     const signature = `Thanks!`;
-    const message = [intro, line1, line2, line3, line4, signature]
+    const message = [intro, '', line1, line2, line3, '', line4, '', signature]
       .filter(Boolean)
       .join('\n');
     return `https://wa.me/?text=${encodeURIComponent(message)}`;
