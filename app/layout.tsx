@@ -4,6 +4,7 @@ import Header from "@/components/ui/Header.server";
 import "./globals.css";
 import AuthGuard from "@/components/ui/AuthGuard.client";
 import AmbientBackground from "@/components/ui/AmbientBackground.client";
+import { AuthProvider } from "@/contexts/AuthContext.client";
 
 
 export const metadata: Metadata = {
@@ -35,11 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AmbientBackground />
-        <Header />
-        <AuthGuard>
-          <main>{children}</main>
-        </AuthGuard>
+        <AuthProvider>
+          <AmbientBackground />
+          <Header />
+          <AuthGuard>
+            <main>{children}</main>
+          </AuthGuard>
+        </AuthProvider>
       </body>
     </html>
   );

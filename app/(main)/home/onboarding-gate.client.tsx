@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import useAuth from '@/hooks/useAuth.client';
+import { useAuth } from '@/contexts/AuthContext.client';
 import api from '@/lib/api';
 
 export default function OnboardingGate() {

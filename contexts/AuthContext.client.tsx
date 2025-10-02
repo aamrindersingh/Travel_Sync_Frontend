@@ -1,7 +1,7 @@
 // client
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import api from '@/lib/api';
 
 interface User {
@@ -17,7 +17,15 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-export default function useAuth() {
+interface AuthContextType extends AuthState {
+  loginWithGoogle: () => void;
+  logout: () => Promise<void>;
+  refetch: () => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isLoading: true,
@@ -53,10 +61,20 @@ export default function useAuth() {
     fetchUser();
   }, [fetchUser]);
 
-  return {
+  const value: AuthContextType = {
     ...authState,
     loginWithGoogle,
     logout,
     refetch: fetchUser,
   };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import useAuth from '@/hooks/useAuth.client';
+import { useAuth } from '@/contexts/AuthContext.client';
 
 function Content() {
   const router = useRouter();

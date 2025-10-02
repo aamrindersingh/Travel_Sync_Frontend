@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import useAuth from "@/hooks/useAuth.client";
+import { useAuth } from "@/contexts/AuthContext.client";
 
 const PUBLIC_PATHS = new Set<string>([
   "/",

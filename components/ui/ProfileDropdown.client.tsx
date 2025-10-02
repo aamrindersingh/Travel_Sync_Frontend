@@ -3,7 +3,7 @@
 
 import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import useAuth from '@/hooks/useAuth.client';
+import { useAuth } from '@/contexts/AuthContext.client';
 
 export default function ProfileDropdown() {
   const router = useRouter();

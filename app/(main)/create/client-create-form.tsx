@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext.client';
 
 
 // Location constants aligned with backend `constants.go`
@@ -29,6 +30,7 @@ const RAILWAY_STATIONS: string[] = [
 
 export default function ClientCreateForm() {
   const router = useRouter();
+  const { user } = useAuth();
   const prefilledOnce = useRef(false);
   const [formData, setFormData] = useState({
     source: '',
@@ -91,11 +93,11 @@ export default function ClientCreateForm() {
   useEffect(() => {
     const prefillPhone = async () => {
       try {
-        // get current user id
-        const me = await api.getMe();
-        console.log('[create] /auth/me response:', me);
-        const userId = me?.user_id || me?.id;
+        if (!user) return;
+        
+        const userId = user.id;
         if (!userId) return;
+        
         // fetch full user details
         const details = await api.getUser(userId);
         console.log('[create] /api/user/:id response:', details);
@@ -105,8 +107,8 @@ export default function ClientCreateForm() {
           details?.phone_number ||
           details?.data?.PhoneNumber ||
           (details?.data && (details.data as Record<string, unknown>)['PhoneNumber']) ||
-          ((details as unknown as Record<string, unknown>)['PhoneNumber'] as string | undefined) ||
-          me?.phone_number;
+          ((details as unknown as Record<string, unknown>)['PhoneNumber'] as string | undefined);
+        
         console.log('[create] extracted phone before parse:', phone);
         if (phone) {
           const raw = String(phone).replace(/\D/g, '');
@@ -120,11 +122,11 @@ export default function ClientCreateForm() {
         console.log('[create] prefillPhone error:', err);
       }
     };
-    if (!prefilledOnce.current && !formData.phone) {
+    if (!prefilledOnce.current && !formData.phone && user) {
       prefilledOnce.current = true;
       prefillPhone();
     }
-  }, [formData.phone]);
+  }, [formData.phone, user]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
