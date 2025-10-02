@@ -60,7 +60,12 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
         .then((res) => {
           if (!mounted) return;
           // API returns { success, data: { ... } }
+          console.log('[recommendations] raw response:', res);
           const payload = res?.data ?? res;
+          console.log('[recommendations] parsed payload:', payload);
+          console.log('[recommendations] best_match:', payload?.best_match);
+          console.log('[recommendations] best_group:', payload?.best_group);
+          console.log('[recommendations] other_alternatives:', payload?.other_alternatives);
           setData(payload);
         })
         .catch((err) => {
@@ -111,6 +116,29 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     return { dateText, timeText };
   }
 
+  // Prefer formatting from ISO in IST (Asia/Kolkata)
+  function formatIstFromIso(iso?: string | null | undefined) {
+    if (!iso) return null;
+    try {
+      const d = new Date(iso);
+      const dateText = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+      }).format(d);
+      const timeText = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+      }).format(d);
+      return { dateText, timeText };
+    } catch {
+      return null;
+    }
+  }
+
   if (loading || phase !== 'done') {
     return (
       <div className="frosted-card">
@@ -152,8 +180,8 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             email={bestMatch.user?.email || bestMatch.ticket?.email || ''}
             from={bestMatch.ticket?.source || '—'}
             to={bestMatch.ticket?.destination || '—'}
-            dateText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
-            timeText={splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
+            dateText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.dateText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
+            timeText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.timeText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
             score={bestMatch.score}
             whatsappLink={bestMatch?.user?.whatsappLink || bestMatch?.ticket?.whatsappLink}
           />
@@ -192,8 +220,8 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 email={m.user?.email || m.ticket?.email || ''}
                 from={m.ticket?.source || '—'}
                 to={m.ticket?.destination || '—'}
-                dateText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
-                timeText={splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
+                dateText={(formatIstFromIso(m.ticket?.departure_at)?.dateText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
+                timeText={(formatIstFromIso(m.ticket?.departure_at)?.timeText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
                 score={m.score}
                 whatsappLink={m?.user?.whatsappLink || m?.ticket?.whatsappLink}
               />
@@ -234,8 +262,8 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 email={alt.user?.email || alt.ticket?.email || ''}
                 from={alt.ticket?.source || '—'}
                 to={alt.ticket?.destination || '—'}
-                dateText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
-                timeText={splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
+                dateText={(formatIstFromIso(alt.ticket?.departure_at)?.dateText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
+                timeText={(formatIstFromIso(alt.ticket?.departure_at)?.timeText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
                 score={alt?.score}
                 whatsappLink={alt?.user?.whatsappLink || alt?.ticket?.whatsappLink}
               />

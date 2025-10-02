@@ -74,6 +74,20 @@ export default function TravelCard({
   whatsappLink,
   className = '',
 }: TravelCardProps) {
+  const formattedTime = React.useMemo(() => {
+    const t = String(timeText || '').trim();
+    if (!t) return '';
+    // Already 12h with AM/PM
+    if (/\b(am|pm)\b/i.test(t)) return t.toUpperCase();
+    // Expect HH:MM
+    const [h, m] = t.split(':');
+    const hh = parseInt(h || '0', 10);
+    const mm = (m || '00').slice(0, 2);
+    if (Number.isNaN(hh)) return t;
+    const ampm = hh >= 12 ? 'PM' : 'AM';
+    const h12 = (hh % 12) || 12;
+    return `${String(h12).padStart(2, '0')}:${mm} ${ampm}`;
+  }, [timeText]);
   return (
     <article
       className={clsx(
@@ -146,7 +160,7 @@ export default function TravelCard({
             <div className="text-sm text-white">
               <span>{dateText}</span>
               {dateText && timeText ? <span className="text-gray-500 mx-2">·</span> : null}
-              {timeText ? <span>{timeText}</span> : null}
+              {timeText ? <span>{formattedTime}</span> : null}
             </div>
           </div>
         ) : null}
