@@ -1,7 +1,7 @@
 // server + client helpers to call Go backend using axios
 import axios, { AxiosInstance } from 'axios';
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://travel-sync-0ank.onrender.com';
 
 class ApiClient {
   private client: AxiosInstance;
