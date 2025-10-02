@@ -30,7 +30,7 @@ const RAILWAY_STATIONS: string[] = [
 
 export default function ClientCreateForm() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, profilePhone } = useAuth();
   const prefilledOnce = useRef(false);
   const [formData, setFormData] = useState({
     source: '',
@@ -89,44 +89,16 @@ export default function ClientCreateForm() {
     }
   }, [destinationOptions, formData.destination]);
 
-  // Prefill WhatsApp number from user profile
+  // Prefill WhatsApp number from cached profile in auth context
   useEffect(() => {
-    const prefillPhone = async () => {
-      try {
-        if (!user) return;
-        
-        const userId = user.id;
-        if (!userId) return;
-        
-        // fetch full user details
-        const details = await api.getUser(userId);
-        console.log('[create] /api/user/:id response:', details);
-        const phone =
-          // backend may return camel, snake or Pascal case
-          details?.data?.phone_number ||
-          details?.phone_number ||
-          details?.data?.PhoneNumber ||
-          (details?.data && (details.data as Record<string, unknown>)['PhoneNumber']) ||
-          ((details as unknown as Record<string, unknown>)['PhoneNumber'] as string | undefined);
-        
-        console.log('[create] extracted phone before parse:', phone);
-        if (phone) {
-          const raw = String(phone).replace(/\D/g, '');
-          const ten = raw.length >= 10 ? raw.slice(-10) : raw;
-          console.log('[create] parsed phone (last 10):', ten);
-          if (ten && ten.length > 0) {
-            setFormData((prev) => ({ ...prev, phone: ten }));
-          }
-        }
-      } catch (err) {
-        console.log('[create] prefillPhone error:', err);
-      }
-    };
-    if (!prefilledOnce.current && !formData.phone && user) {
+    if (prefilledOnce.current) return;
+    if (formData.phone) return;
+    if (!user) return;
+    if (profilePhone && profilePhone.length > 0) {
+      setFormData((prev) => ({ ...prev, phone: profilePhone }));
       prefilledOnce.current = true;
-      prefillPhone();
     }
-  }, [formData.phone, user]);
+  }, [formData.phone, user, profilePhone]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
