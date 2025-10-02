@@ -16,6 +16,7 @@ type TicketLike = {
   source?: string;
   destination?: string;
   whatsappLink?: string;
+  phone_number?: string;
   departure_at?: string;
 };
 
@@ -139,7 +140,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     }
   }
 
-  function buildWhatsappLink(ticket?: TicketLike, user?: RecUser, ticketLabel?: string) {
+  function buildWhatsappLink(ticket?: TicketLike, user?: RecUser) {
     const phone = String(ticket?.phone_number || '').replace(/\D/g, '');
     if (!phone) return undefined;
     const when = formatIstFromIso(ticket?.departure_at || '')?.timeText || '';
@@ -198,7 +199,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             dateText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.dateText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
             timeText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.timeText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
             score={bestMatch.score}
-            whatsappLink={buildWhatsappLink(bestMatch.ticket, bestMatch.user, 'best_match')}
+            whatsappLink={buildWhatsappLink(bestMatch.ticket, bestMatch.user)}
           />
         ) : (
           <div className="flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10">
@@ -238,7 +239,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={(formatIstFromIso(m.ticket?.departure_at)?.dateText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={(formatIstFromIso(m.ticket?.departure_at)?.timeText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
                 score={m.score}
-                whatsappLink={buildWhatsappLink(m.ticket, m.user, 'best_group')}
+                whatsappLink={buildWhatsappLink(m.ticket, m.user)}
               />
             ))}
           </div>
@@ -280,7 +281,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={(formatIstFromIso(alt.ticket?.departure_at)?.dateText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={(formatIstFromIso(alt.ticket?.departure_at)?.timeText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
                 score={alt?.score}
-                whatsappLink={buildWhatsappLink(alt.ticket, alt.user, 'alternative')}
+                whatsappLink={buildWhatsappLink(alt.ticket, alt.user)}
               />
             ))}
           </div>
