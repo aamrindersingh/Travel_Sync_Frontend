@@ -139,6 +139,22 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
     }
   }
 
+  function buildWhatsappLink(ticket?: TicketLike, user?: RecUser, ticketLabel?: string) {
+    const phone = String(ticket?.phone_number || '').replace(/\D/g, '');
+    if (!phone) return undefined;
+    const when = formatIstFromIso(ticket?.departure_at || '')?.timeText || '';
+    const dateText = formatIstFromIso(ticket?.departure_at || '')?.dateText || '';
+    const traveler = user?.name || bName(ticket);
+    const email = user?.email ? ` (${user.email})` : '';
+    const intro = `Hello ${traveler}${email},`;
+    const line1 = `I'm interested in sharing a cab for your trip ${ticket?.source || ''} → ${ticket?.destination || ''}.`;
+    const line2 = (dateText || when) ? `Planned departure: ${dateText}${dateText && when ? ' · ' : ''}${when}.` : '';
+    const line3 = `If you're open to coordinating, please let me know.`;
+    const footer = `Thanks!`;
+    const message = [intro, line1, line2, line3, footer].filter(Boolean).join('\n');
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  }
+
   if (loading || phase !== 'done') {
     return (
       <div className="frosted-card">
@@ -183,7 +199,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
             dateText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.dateText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).dateText}
             timeText={(formatIstFromIso(bestMatch.ticket?.departure_at)?.timeText) || splitAndFormat([bestMatch?.date, bestMatch?.time].filter(Boolean).join(' · ')).timeText}
             score={bestMatch.score}
-            whatsappLink={bestMatch?.user?.whatsappLink || bestMatch?.ticket?.whatsappLink}
+            whatsappLink={buildWhatsappLink(bestMatch.ticket, bestMatch.user, 'best_match')}
           />
         ) : (
           <div className="flex items-center gap-3 p-4 rounded-lg bg-white/5 border border-white/10">
@@ -223,7 +239,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={(formatIstFromIso(m.ticket?.departure_at)?.dateText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={(formatIstFromIso(m.ticket?.departure_at)?.timeText) || splitAndFormat([m?.date, m?.time].filter(Boolean).join(' · ')).timeText}
                 score={m.score}
-                whatsappLink={m?.user?.whatsappLink || m?.ticket?.whatsappLink}
+                whatsappLink={buildWhatsappLink(m.ticket, m.user, 'best_group')}
               />
             ))}
           </div>
@@ -265,7 +281,7 @@ export default function Recommendations({ ticketId }: RecommendationsProps) {
                 dateText={(formatIstFromIso(alt.ticket?.departure_at)?.dateText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).dateText}
                 timeText={(formatIstFromIso(alt.ticket?.departure_at)?.timeText) || splitAndFormat([alt?.date, alt?.time].filter(Boolean).join(' · ')).timeText}
                 score={alt?.score}
-                whatsappLink={alt?.user?.whatsappLink || alt?.ticket?.whatsappLink}
+                whatsappLink={buildWhatsappLink(alt.ticket, alt.user, 'alternative')}
               />
             ))}
           </div>
