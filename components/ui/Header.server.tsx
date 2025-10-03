@@ -25,7 +25,7 @@ export default function Header() {
       </Link>
 
       {/* Navigation Links */}
-      <div className="hidden md:flex items-center gap-2 relative z-10">
+      <div className="flex items-center gap-2 relative z-10">
         {[
           { href: "/home", label: "Home" },
           { href: "/tickets", label: "Tickets" },
@@ -33,7 +33,7 @@ export default function Header() {
           <Link
             key={item.href}
             href={item.href}
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00E4FF]/50"
+            className="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00E4FF]/50"
           >
             {item.label}
           </Link>

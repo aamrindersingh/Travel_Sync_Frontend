@@ -14,9 +14,9 @@ export default function HomePage() {
   return (
     <div className="home-page-container">
       <OnboardingGate />
-      <section className="relative h-full flex flex-col lg:flex-row items-center justify-center gap-x-16 lg:gap-x-32 py-10">
+      <section className="relative min-h-[85vh] flex flex-col lg:flex-row items-start justify-start md:items-center md:justify-center gap-x-8 lg:gap-x-32 pt-8 sm:pt-6 md:pt-0 lg:pt-0 pb-10">
         {/* Left Content */}
-        <div className="basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 ml-40 lg:ml-56 xl:ml-64">
+        <div className="w-full lg:basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 px-6 sm:px-10 lg:pl-56 xl:pl-64 text-center md:text-left md:-mt-2 lg:-mt-9">
           <h1
             className="font-bold leading-tight"
             style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
@@ -31,7 +31,7 @@ export default function HomePage() {
             </span>
           </h1>
           <p
-            className="text-gray-300 max-w-2xl leading-relaxed"
+            className="text-gray-300 max-w-xl md:max-w-2xl leading-relaxed mx-auto md:mx-0"
             style={{ fontSize: "clamp(0.875rem, 2vw, 1.25rem)" }}
           >
             Connect with fellow students traveling to the same destination.
@@ -39,10 +39,10 @@ export default function HomePage() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-row gap-4 sm:gap-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-center md:justify-start">
             <Link
               href="/create"
-              className="group relative px-6 sm:px-7 lg:px-8 py-3 sm:py-3.5 lg:py-4 rounded-xl font-semibold text-base sm:text-lg text-white transition-all duration-300 flex items-center justify-center space-x-3 bg-gradient-to-r from-[#4ECDC4]/30 to-[#45B7D1]/30 backdrop-blur-sm border-2 border-[#4ECDC4]/50 hover:from-[#4ECDC4]/40 hover:to-[#45B7D1]/40 hover:border-[#4ECDC4]/70 shadow-lg hover:shadow-[0_0_25px_rgba(78,205,196,0.4)] hover:scale-105"
+              className="group w-full sm:w-auto relative px-6 sm:px-7 lg:px-8 py-3 sm:py-3.5 lg:py-4 rounded-xl font-semibold text-base sm:text-lg text-white transition-all duration-300 flex items-center justify-center space-x-3 bg-gradient-to-r from-[#4ECDC4]/30 to-[#45B7D1]/30 backdrop-blur-sm border-2 border-[#4ECDC4]/50 hover:from-[#4ECDC4]/40 hover:to-[#45B7D1]/40 hover:border-[#4ECDC4]/70 shadow-lg hover:shadow-[0_0_25px_rgba(78,205,196,0.4)] hover:scale-105"
             >
               <svg
                 className="w-5 h-5 sm:w-5.5 sm:h-5.5"
@@ -62,7 +62,7 @@ export default function HomePage() {
 
             <Link
               href="/tickets"
-              className="group relative px-6 sm:px-7 lg:px-8 py-3 sm:py-3.5 lg:py-4 rounded-xl font-semibold text-base sm:text-lg text-white transition-all duration-300 flex items-center justify-center space-x-3 bg-gradient-to-r from-[#45B7D1]/25 to-[#96CEB4]/25 backdrop-blur-sm border-2 border-[#45B7D1]/40 hover:from-[#45B7D1]/35 hover:to-[#96CEB4]/35 hover:border-[#45B7D1]/60 shadow-lg hover:shadow-[0_0_20px_rgba(69,183,209,0.3)] hover:scale-105"
+              className="group w-full sm:w-auto relative px-6 sm:px-7 lg:px-8 py-3 sm:py-3.5 lg:py-4 rounded-xl font-semibold text-base sm:text-lg text-white transition-all duration-300 flex items-center justify-center space-x-3 bg-gradient-to-r from-[#45B7D1]/25 to-[#96CEB4]/25 backdrop-blur-sm border-2 border-[#45B7D1]/40 hover:from-[#45B7D1]/35 hover:to-[#96CEB4]/35 hover:border-[#45B7D1]/60 shadow-lg hover:shadow-[0_0_20px_rgba(69,183,209,0.3)] hover:scale-105"
             >
               <svg
                 className="w-5 h-5 sm:w-5.5 sm:h-5.5"
@@ -83,7 +83,7 @@ export default function HomePage() {
         </div>
 
         {/* Travel Map */}
-        <div className="basis-1/2 flex justify-end items-center pr-8 lg:pr-12 xl:pr-16">
+        <div className="hidden md:flex md:basis-1/2 justify-end items-center pr-8 lg:pr-12 xl:pr-16 md:-mt-2 lg:-mt-4">
           <TravelMap className="w-full h-auto scale-115 lg:scale-130 xl:scale-150" />
         </div>
       </section>
