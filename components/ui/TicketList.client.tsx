@@ -245,6 +245,7 @@ export default function TicketListClient() {
         });
         const formattedTime = formatTime12hFromIso(ticket.departure_at);
         const isEditing = editingId === ticket.id;
+        const isLocked = isEditing && form.status === 'closed';
         return (
           <div
             key={ticket.id}
@@ -312,7 +313,8 @@ export default function TicketListClient() {
                       name="source"
                       value={form.source}
                       onChange={onFormChange}
-                      className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+                      disabled={isLocked}
+                      className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 disabled:opacity-50"
                     >
                       <option value="" disabled>Select source</option>
                       {allLocations.map((opt) => (
@@ -335,7 +337,8 @@ export default function TicketListClient() {
                       name="destination"
                       value={form.destination}
                       onChange={onFormChange}
-                      className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8"
+                      disabled={isLocked}
+                      className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent transition-all duration-300 hover:bg-white/8 disabled:opacity-50"
                     >
                       <option value="" disabled>Select destination</option>
                       {destinationOptions.map((opt) => (
@@ -359,7 +362,8 @@ export default function TicketListClient() {
                       name="date"
                       value={form.date}
                       onChange={onFormChange}
-                      className="w-full px-3 py-2 pl-10 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent"
+                      disabled={isLocked}
+                      className="w-full px-3 py-2 pl-10 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] focus:border-transparent disabled:opacity-50"
                     />
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-white/80">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
@@ -375,7 +379,7 @@ export default function TicketListClient() {
                     </label>
                   </div>
                   <div className="relative">
-                    <select name="hour" value={form.hour} onChange={onFormChange} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)]">
+                    <select name="hour" value={form.hour} onChange={onFormChange} disabled={isLocked} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] disabled:opacity-50">
                       <option value="" disabled>HH</option>
                       {Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0')).map(h => (
                         <option key={h} value={h} className="bg-[#0a0a0a]">{h}</option>
@@ -386,7 +390,7 @@ export default function TicketListClient() {
                     </div>
                   </div>
                   <div className="relative">
-                    <select name="minute" value={form.minute} onChange={onFormChange} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)]">
+                    <select name="minute" value={form.minute} onChange={onFormChange} disabled={isLocked} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] disabled:opacity-50">
                       <option value="" disabled>MM</option>
                       {Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0')).map(m => (
                         <option key={m} value={m} className="bg-[#0a0a0a]">{m}</option>
@@ -397,7 +401,7 @@ export default function TicketListClient() {
                     </div>
                   </div>
                   <div className="relative">
-                    <select name="ampm" value={form.ampm} onChange={onFormChange} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)]">
+                    <select name="ampm" value={form.ampm} onChange={onFormChange} disabled={isLocked} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] disabled:opacity-50">
                       <option value="" disabled>AM/PM</option>
                       <option value="AM" className="bg-[#0a0a0a]">AM</option>
                       <option value="PM" className="bg-[#0a0a0a]">PM</option>
@@ -414,7 +418,7 @@ export default function TicketListClient() {
                     Acceptable Time Difference <span className="ml-2 text-[var(--neon-accent)] font-bold">{form.time_diff_mins} mins</span>
                     <span className="ml-2 text-white/70 text-[10px]">(~{(form.time_diff_mins/60).toFixed(1)} hr)</span>
                   </label>
-                  <input type="range" min={0} max={300} step={5} name="time_diff_mins" value={form.time_diff_mins} onChange={onFormChange} className="w-full h-2 bg-white/10 rounded-lg appearance-none accent-[var(--neon-accent)]" />
+                  <input type="range" min={0} max={300} step={5} name="time_diff_mins" value={form.time_diff_mins} onChange={onFormChange} disabled={isLocked} className="w-full h-2 bg-white/10 rounded-lg appearance-none accent-[var(--neon-accent)] disabled:opacity-50" />
                 </div>
                 <div className="group">
                   <label className="block text-xs font-semibold text-white mb-1 flex items-center">
@@ -422,7 +426,7 @@ export default function TicketListClient() {
                     Empty Seats
                   </label>
                   <div className="relative">
-                    <select name="empty_seats" value={form.empty_seats} onChange={onFormChange} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)]">
+                    <select name="empty_seats" value={form.empty_seats} onChange={onFormChange} disabled={isLocked} className="w-full px-3 py-2 appearance-none rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-[var(--neon-accent)] disabled:opacity-50">
                       {[1,2,3,4,5,6].map((n) => (
                         <option key={n} value={n} className="bg-[#0a0a0a]">{n}</option>
                       ))}
@@ -444,7 +448,8 @@ export default function TicketListClient() {
                       name="phone_number"
                       value={form.phone_number}
                       onChange={onFormChange}
-                      className="w-full px-3 py-2 pl-10 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400/30 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400"
+                      disabled={isLocked}
+                      className="w-full px-3 py-2 pl-10 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-2 border-green-400/30 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-400 disabled:opacity-50"
                       placeholder="Your WhatsApp number"
                     />
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400">
@@ -461,20 +466,19 @@ export default function TicketListClient() {
                 {!isEditing ? (
                   <>
                     <button
+                      title="Delete"
+                      aria-label="Delete ticket"
+                      onClick={async (e) => { e.stopPropagation(); if (!confirm('Delete this ticket?')) return; try { await api.deleteTravel(ticket.id); setTickets((prev)=>prev.filter(t=>t.id!==ticket.id)); } catch (err) { const maybeAxios = err as { response?: { data?: { error?: string } } } | undefined; setError(maybeAxios?.response?.data?.error || 'Failed to delete ticket'); } }}
+                      className={`inline-flex items-center justify-center w-9 h-9 rounded-md border text-rose-300 transition-colors border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 hover:text-rose-200`}
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
+                    </button>
+                    <button
                       disabled={ticket.status === 'closed'}
                       onClick={(e) => { e.stopPropagation(); beginEdit(ticket); }}
                       className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${ticket.status === 'closed' ? 'text-white/40 border border-white/10 bg-white/[0.02] cursor-not-allowed' : 'text-white/90 border border-white/10 bg-white/[0.03] hover:text-white hover:border-[var(--neon-accent)]/40 hover:shadow-[0_0_18px_rgba(0,228,255,0.25)]'}`}
                     >
                       Edit
-                    </button>
-                    <button
-                      disabled={ticket.status === 'closed'}
-                      title="Delete"
-                      aria-label="Delete ticket"
-                      onClick={async (e) => { e.stopPropagation(); if (!confirm('Delete this ticket?')) return; try { await api.deleteTravel(ticket.id); setTickets((prev)=>prev.filter(t=>t.id!==ticket.id)); } catch (err) { const maybeAxios = err as { response?: { data?: { error?: string } } } | undefined; setError(maybeAxios?.response?.data?.error || 'Failed to delete ticket'); } }}
-                      className={`inline-flex items-center justify-center w-8 h-8 rounded-md border text-rose-300 transition-colors ${ticket.status === 'closed' ? 'border-white/10 bg-white/[0.02] cursor-not-allowed opacity-50' : 'border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20'}`}
-                    >
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7h6m-7 0V5a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>
                     </button>
                   </>
                 ) : (
