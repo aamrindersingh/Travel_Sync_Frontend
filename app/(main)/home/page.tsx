@@ -14,9 +14,9 @@ export default function HomePage() {
   return (
     <div className="home-page-container">
       <OnboardingGate />
-      <section className="relative min-h-[85vh] flex flex-col lg:flex-row items-start justify-start md:items-center md:justify-center gap-x-8 lg:gap-x-32 pt-8 sm:pt-6 md:pt-0 lg:pt-0 pb-10">
+      <section className="relative flex flex-col lg:flex-row min-h-[85vh] items-start justify-start gap-x-8 pt-8 sm:pt-6 pb-10 md:h-full md:items-center md:justify-center md:gap-x-16 md:py-10 lg:gap-x-32">
         {/* Left Content */}
-        <div className="w-full lg:basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 px-6 sm:px-10 lg:pl-56 xl:pl-64 text-center md:text-left md:-mt-2 lg:-mt-9">
+        <div className="w-full lg:basis-1/2 flex flex-col justify-center space-y-6 sm:space-y-8 relative z-10 px-6 sm:px-10 md:px-0 md:pl-0 md:ml-40 lg:ml-56 xl:ml-64 text-center md:text-left">
           <h1
             className="font-bold leading-tight"
             style={{ fontSize: "clamp(1.5rem, 4vw, 3rem)" }}
@@ -83,7 +83,7 @@ export default function HomePage() {
         </div>
 
         {/* Travel Map */}
-        <div className="hidden md:flex md:basis-1/2 justify-end items-center pr-8 lg:pr-12 xl:pr-16 md:-mt-2 lg:-mt-4">
+        <div className="hidden md:flex md:basis-1/2 justify-end items-center pr-8 lg:pr-12 xl:pr-16">
           <TravelMap className="w-full h-auto scale-115 lg:scale-130 xl:scale-150" />
         </div>
       </section>
