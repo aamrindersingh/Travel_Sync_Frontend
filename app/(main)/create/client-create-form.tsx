@@ -354,7 +354,7 @@ export default function ClientCreateForm() {
           <span className="ml-2 text-[var(--neon-accent)] font-bold">{timeDiffMins} mins</span>
           <span className="ml-2 text-white/70 text-xs">(~{(timeDiffMins / 60).toFixed(1)} hr)</span>
         </label>
-        <div className="relative px-2 py-4 rounded-xl bg-white/5 border border-white/10">
+        <div className="relative px-2 py-6 rounded-xl bg-white/5 border border-white/10">
           <input
             type="range"
             min={0}
@@ -364,13 +364,16 @@ export default function ClientCreateForm() {
             onChange={(e) => setTimeDiffMins(parseInt(e.target.value, 10))}
             className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[var(--neon-accent)]"
           />
-          <div className="flex justify-between text-xs text-white/60 mt-2">
-            <span>0</span>
-            <span>60</span>
-            <span>120</span>
-            <span>180</span>
-            <span>240</span>
-            <span>300</span>
+          <div className="relative mt-2 h-4 text-xs text-white/60">
+            {[0, 1, 2, 3, 4, 5].map((i) => (
+              <span
+                key={i}
+                className={`absolute top-0 font-mono w-[3ch] text-center ${i === 0 ? 'translate-x-0' : i === 5 ? '-translate-x-full' : '-translate-x-1/2'}`}
+                style={{ left: `${(i/5)*100}%` }}
+              >
+                {i * 60}
+              </span>
+            ))}
           </div>
         </div>
       </div>
