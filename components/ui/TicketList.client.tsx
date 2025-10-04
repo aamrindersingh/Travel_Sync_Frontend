@@ -120,7 +120,7 @@ export default function TicketListClient() {
 
   // If destination becomes invalid after changing source rules, reset it
   useEffect(() => {
-    if (form.destination && !destinationOptions.includes(form.destination as any)) {
+    if (form.destination && !destinationOptions.includes(form.destination as typeof destinationOptions[number])) {
       setForm((prev) => ({ ...prev, destination: '' }));
     }
   }, [destinationOptions, form.destination]);
