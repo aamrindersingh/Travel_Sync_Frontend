@@ -82,8 +82,8 @@ export default function TicketListClient() {
     'Kempegowda International Airport Terminal-2',
   ] as const, []);
   const RAILWAY_STATIONS = useMemo(() => [
-    'KSR SBC Bengaluru Junction',
-    'SMVT Bengaluru railway station',
+    'KSR SBC Bengaluru Junction Railway Station',
+    'SMVT Bengaluru Railway station',
     'Krishnarajapuram Railway Station',
     'Yesvantpur Junction Railway station',
     'Banglore Cantonment Railway Station',
