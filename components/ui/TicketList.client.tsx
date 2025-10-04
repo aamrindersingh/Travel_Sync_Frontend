@@ -102,10 +102,28 @@ export default function TicketListClient() {
     if (!src) return allLocations;
     const isAirport = (AIRPORT_TERMINALS as readonly string[]).includes(src);
     const isHostel = (HOSTELS as readonly string[]).includes(src);
-    if (isAirport) return [...HOSTELS];
-    if (isHostel) return [...AIRPORT_TERMINALS, ...RAILWAY_STATIONS];
+    const isRailway = (RAILWAY_STATIONS as readonly string[]).includes(src);
+    
+    // Rule 1: If source is an airport terminal or a railway station, destination should only show hostels
+    if (isAirport || isRailway) {
+      return [...HOSTELS];
+    }
+    
+    // Rule 2: If source is a hostel, destination should show airport terminals and railway stations
+    if (isHostel) {
+      return [...AIRPORT_TERMINALS, ...RAILWAY_STATIONS];
+    }
+    
+    // Default: filter out the selected source
     return allLocations.filter((opt) => opt !== src);
   }, [form.source, allLocations, AIRPORT_TERMINALS, HOSTELS, RAILWAY_STATIONS]);
+
+  // If destination becomes invalid after changing source rules, reset it
+  useEffect(() => {
+    if (form.destination && !destinationOptions.includes(form.destination as any)) {
+      setForm((prev) => ({ ...prev, destination: '' }));
+    }
+  }, [destinationOptions, form.destination]);
 
   useEffect(() => {
     let mounted = true;
